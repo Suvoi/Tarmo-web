@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 
+const API_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://dev-tarmo:9136"
+    : "http://tarmo:9136";
+
 export async function GET(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;
 
-  const res = await fetch(`http://tarmo:9136/recipes/${encodeURIComponent(id)}`);
+  const res = await fetch(`${API_URL}/recipes/${encodeURIComponent(id)}`);
 
   if (!res.ok) {
     return NextResponse.json({ error: "Recipe not found" }, { status: res.status });
@@ -22,7 +27,7 @@ export async function DELETE(
 ) {
   const { id } = await context.params;
 
-  const res = await fetch(`http://tarmo:9136/recipes/${encodeURIComponent(id)}`, {
+  const res = await fetch(`${API_URL}/recipes/${encodeURIComponent(id)}`, {
     method: "DELETE",
   });
 

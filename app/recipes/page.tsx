@@ -25,15 +25,6 @@ export default function Page() {
   useEffect(() => {
     async function loadRecipes() {
 
-      if (process.env.NODE_ENV === "development") {
-        setRecipes(Array.from({ length: 12 }, (_, i) => ({
-          id: i + 1,
-          name: `Recipe ${i + 1}`,
-        })))
-        setLoading(false)
-        return
-      }
-
       try {
         const res = await fetch(`/api/recipes`, { cache: "no-store" })
 

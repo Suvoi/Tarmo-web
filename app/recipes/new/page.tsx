@@ -1,6 +1,10 @@
 "use client"
 
 import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { recipeSchema, type Recipe } from "@/shared/schemas/recipe"
+
 import { AppSidebar } from "@/components/app-sidebar"
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb"
 import { Textarea } from "@/components/ui/textarea"
@@ -15,33 +19,41 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 
 export default function Page() {
-  const [name, setName] = useState("")
-  const [instructions, setInstructions] = useState("")
+  const { register, handleSubmit, reset } = useForm<Recipe>({
+    resolver: zodResolver(recipeSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      quantity: "",
+      unit: "",
+      price: "",
+      currency: "",
+      time: "",
+      difficulty: "",
+      img_url: "",
+    },
+  })
+
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  const onSubmit = async (data: Recipe) => {
     setLoading(true)
-
     try {
       const res = await fetch("/api/recipes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, instructions }),
+        body: JSON.stringify(data),
       })
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
       router.push("/recipes")
       toast.success("Recipe created successfully!")
-      setName("")
-      setInstructions("")
+      reset()
     } catch (err) {
-
       console.error("Failed to create recipe:", err)
-      toast.error(`There was an error connecting to the server.`, {description: "Please try again later."})
-
+      toast.error(`There was an error connecting to the server.`, { description: "Please try again later." })
     } finally {
       setLoading(false)
     }
@@ -82,26 +94,16 @@ export default function Page() {
         {/* Form container centered */}
         <div className="border flex flex-1 items-center p-6">
           <div className="border w-full max-w-lg p-6 shadow-sm">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
               <FieldSet>
                 <FieldGroup>
                   <Field>
                     <FieldLabel htmlFor="name">Name</FieldLabel>
-                    <Input
-                      id="name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      autoComplete="off"
-                      required
-                    />
+                    <Input id="name" {...register("name")} autoComplete="off" required />
                   </Field>
                   <Field>
-                    <FieldLabel>Instructions</FieldLabel>
-                    <Textarea
-                      value={instructions}
-                      onChange={(e) => setInstructions(e.target.value)}
-                      className="max-h-50 h-32"
-                    />
+                    <FieldLabel>Description</FieldLabel>
+                    <Textarea {...register("description")} className="max-h-50 h-32" />
                   </Field>
                 </FieldGroup>
               </FieldSet>
