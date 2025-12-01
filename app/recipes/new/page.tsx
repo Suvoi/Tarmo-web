@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { FieldSet, FieldGroup, Field, FieldLabel } from "@/components/ui/field"
 import Link from "next/link"
-import { Undo2 } from "lucide-react"
+import { ChevronLeft, Undo2 } from "lucide-react"
 import { Spinner } from "@/components/ui/spinner"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
@@ -86,41 +86,26 @@ export default function Page() {
         {/* Title */}
         <div className="flex items-center space-x-2 m-4">
           <Link href="/recipes">
-            <Undo2 className="size-5" />
+            <ChevronLeft />
           </Link>
           <h1 className="text-2xl font-bold">New Recipe</h1>
         </div>
 
         {/* Form container centered */}
-        <div className="border flex flex-1 items-center p-6">
-          <div className="border w-full max-w-lg p-6 shadow-sm">
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-              <FieldSet>
+        <div className="p-4">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <FieldSet className="border w-1/2">
                 <FieldGroup>
-                  <Field>
-                    <FieldLabel htmlFor="name">Name</FieldLabel>
-                    <Input id="name" {...register("name")} autoComplete="off" required />
-                  </Field>
-                  <Field>
-                    <FieldLabel>Description</FieldLabel>
-                    <Textarea {...register("description")} className="max-h-50 h-32" />
-                  </Field>
+                  <div className="flex items-end space-x-2">
+                    <img src="https://placehold.co/150" className="rounded-lg object-cover" />
+                    <Field className="flex-1 border">
+                      <FieldLabel htmlFor="name">Name</FieldLabel>
+                      <Input id="name" {...register("name")} autoComplete="off" required />
+                    </Field>
+                  </div>
                 </FieldGroup>
               </FieldSet>
-
-              {/* Button aligned right */}
-              <div className="flex justify-between">
-                <Link href="/recipes">
-                  <Button variant="secondary" className="w-32 cursor-pointer">
-                    Back
-                  </Button>
-                </Link>
-                <Button type="submit" disabled={loading} className="w-32 cursor-pointer">
-                  {loading ? <Spinner /> : "Create"}
-                </Button>
-              </div>
             </form>
-          </div>
         </div>
       </SidebarInset>
     </SidebarProvider>
