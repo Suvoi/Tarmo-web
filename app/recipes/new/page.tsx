@@ -24,11 +24,9 @@ export default function Page() {
     defaultValues: {
       name: "",
       description: "",
+      instructions: "",
       quantity: "",
       unit: "",
-      price: "",
-      currency: "",
-      time: "",
       difficulty: "",
       img_url: "",
     },
