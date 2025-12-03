@@ -12,11 +12,7 @@ import { ChevronRight, Inbox, LucideReceiptRussianRuble, Plus } from "lucide-rea
 import { Spinner } from "@/components/ui/spinner"
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 
-type Recipe = {
-  id: string | number
-  name: string
-  instructions?: string
-}
+import { Recipe } from "@/shared/schemas/recipe"
 
 export default function Page() {
   const [recipes, setRecipes] = useState<Recipe[]>([])
@@ -83,7 +79,7 @@ export default function Page() {
                     <CardContent>
                       <h3 className="text-lg font-semibold">{recipe.name}</h3>
                       <p className="text-sm text-muted-foreground line-clamp-3">
-                        {recipe.instructions || "No instructions"}
+                        {recipe.description || "No description"}
                       </p>
                     </CardContent>
                   </Card>

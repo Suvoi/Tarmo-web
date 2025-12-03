@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { recipeSchema, type Recipe } from "@/shared/schemas/recipe"
 
@@ -13,35 +13,40 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { FieldSet, FieldGroup, Field, FieldLabel } from "@/components/ui/field"
 import Link from "next/link"
-import { ChevronLeft, Undo2 } from "lucide-react"
-import { Spinner } from "@/components/ui/spinner"
+import { ChevronLeft } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Spinner } from "@/components/ui/spinner"
 
 export default function Page() {
-  const { register, handleSubmit, reset } = useForm<Recipe>({
+  const { register, handleSubmit, reset, setValue, watch } = useForm<Recipe>({
     resolver: zodResolver(recipeSchema),
     defaultValues: {
       name: "",
       description: "",
       instructions: "",
-      quantity: "",
+      quantity: 0,
       unit: "",
       difficulty: "",
-      img_url: "",
+      img_url: "https://placehold.co/150",
     },
   })
+
+  const unit = watch("unit")
+  const difficulty = watch("difficulty")
 
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const onSubmit = async (data: Recipe) => {
     setLoading(true)
+    console.log("checkpoint")
     try {
       const res = await fetch("/api/recipes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, quantity: Number(data.quantity) }),
       })
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -60,9 +65,8 @@ export default function Page() {
   return (
     <SidebarProvider style={{ "--sidebar-width": "14rem" } as React.CSSProperties}>
       <AppSidebar />
-      <SidebarInset className="flex flex-col h-full">
+      <SidebarInset className="flex flex-col min-h-screen">
 
-        {/* Header Breadcrumb */}
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <Breadcrumb>
             <BreadcrumbList>
@@ -81,30 +85,92 @@ export default function Page() {
           </Breadcrumb>
         </header>
 
-        {/* Title */}
-        <div className="flex items-center space-x-2 m-4">
+        <div className="flex items-center space-x-2 m-4 shrink-0">
           <Link href="/recipes">
             <ChevronLeft />
           </Link>
           <h1 className="text-2xl font-bold">New Recipe</h1>
         </div>
 
-        {/* Form container centered */}
-        <div className="p-4">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <FieldSet className="border w-1/2">
-                <FieldGroup>
-                  <div className="flex items-end space-x-2">
-                    <img src="https://placehold.co/150" className="rounded-lg object-cover" />
-                    <Field className="flex-1 border">
+        <div className="flex-1 p-4 overflow-auto">
+          <form onSubmit={handleSubmit(onSubmit)} id="recipe-form" className="flex space-x-8">
+            <FieldSet className="w-1/2">
+              <FieldGroup>
+                <div className="flex items-start space-x-4">
+                  <Field className="size-[150px]">
+                    <img src={watch("img_url")} className="rounded-lg object-cover" />
+                  </Field>
+                  <div className="flex-1 space-y-2">
+                    <Field>
                       <FieldLabel htmlFor="name">Name</FieldLabel>
                       <Input id="name" {...register("name")} autoComplete="off" required />
                     </Field>
+                    <div className="flex justify-between items-end">
+                      <div className="flex items-end space-x-2">
+                        <Field className="w-1/3">
+                          <FieldLabel htmlFor="quantity">Quantity</FieldLabel>
+                          <Input id="quantity" type="number" {...register("quantity", { valueAsNumber: true })} autoComplete="off" required />
+                        </Field>
+                        <Select onValueChange={(value) => setValue("unit", value, { shouldValidate: true })}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Unit"/>
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="pcs">Pieces</SelectItem>
+                            <SelectGroup>
+                              <SelectLabel>Weight</SelectLabel>
+                              <SelectItem value="mg">mg</SelectItem>
+                              <SelectItem value="g">g</SelectItem>
+                              <SelectItem value="kg">kg</SelectItem>
+                            </SelectGroup>
+                            <SelectGroup>
+                              <SelectLabel>Volume</SelectLabel>
+                              <SelectItem value="ml">ml</SelectItem>
+                              <SelectItem value="l">l</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <Select onValueChange={(value) => setValue("difficulty", value, { shouldValidate: true })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Difficulty"/>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Easy">Easy</SelectItem>
+                          <SelectItem value="Medium">Medium</SelectItem>
+                          <SelectItem value="Hard">Hard</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
-                </FieldGroup>
-              </FieldSet>
-            </form>
+                </div>
+              </FieldGroup>
+              <FieldGroup>
+                <Field>
+                  <FieldLabel>Description</FieldLabel>
+                  <Textarea className="resize-none min-h-60 max-h-60 overflow-y-auto" {...register("description")} />
+                </Field>
+              </FieldGroup>
+              <Input type="hidden" {...register("img_url")} />
+            </FieldSet>
+            <FieldSet className="w-1/2">
+              <Field>
+                <FieldLabel>Instructions</FieldLabel>
+                <Textarea className="resize-none min-h-[414px] overflow-y-auto" {...register("instructions")} />
+              </Field>
+            </FieldSet>
+          </form>
         </div>
+
+        <footer className="p-4 shrink-0 flex items-center justify-between">
+          <Link href={"/recipes"}>
+            <Button variant="outline">Back</Button>
+          </Link>
+          <Button type="submit" form="recipe-form" disabled={loading} className="cursor-pointer">
+            {loading ? <Spinner /> : "Create"}
+          </Button>
+        </footer>
+
       </SidebarInset>
     </SidebarProvider>
   )

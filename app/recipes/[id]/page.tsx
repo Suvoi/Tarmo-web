@@ -24,18 +24,7 @@ import { ChevronLeft, Pencil, Trash2 } from "lucide-react"
 import { Spinner } from "@/components/ui/spinner"
 import { Badge } from "@/components/ui/badge"
 
-type Recipe = {
-  id: string | number
-  name: string
-  description?: string
-  quantity: number
-  unit: string
-  price?: number
-  currency?: string
-  time?: number
-  difficulty: string
-  img_url?: string
-}
+import { Recipe } from "@/shared/schemas/recipe"
 
 export default function Page({ params }: { params: { id: string } }) {
   const [recipe, setRecipe] = useState<Recipe | null>(null)
@@ -52,23 +41,6 @@ export default function Page({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     async function loadRecipe() {
-
-      if (process.env.NODE_ENV === "development") {
-        setRecipe({
-            id: params.id,
-            name: `Mock Recipe ${params.id}`,
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            quantity: 100,
-            unit: "g",
-            price: 10,
-            currency: "RON",
-            time: 5,
-            difficulty: "Easy",
-            img_url: "https://placehold.co/128"
-          })
-          setLoading(false)
-          return
-      }
 
       try {
         const res = await fetch(`/api/recipes/${params.id}`, { cache: "no-store" })
@@ -128,22 +100,16 @@ export default function Page({ params }: { params: { id: string } }) {
                         <h1 className="text-3xl">{recipe.name}</h1>
                         <p className="text-lg">{recipe.description}</p>
                       </div>
-                      <div className="flex space-x-2">
-                        <Badge variant="outline"># tasty</Badge>
-                        <Badge variant="outline"># salty</Badge>
-                        <Badge variant="outline"># patapim</Badge>
-                        <Badge variant="outline"># hp</Badge>
-                      </div>
                     </div>
                   </div>
-                  <div className="w-1/5 flex flex-col justify-between items-end">
+                  <div className="w-1/5 flex flex-col justify-start items-end space-y-2">
                     <Badge variant="secondary">{recipe.quantity} {recipe.unit}</Badge>
-                    <Badge variant="secondary">{recipe.price} {recipe.currency}</Badge>
-                    <Badge variant="secondary">{recipe.time} min</Badge>
                     <Badge variant="secondary">{recipe.difficulty}</Badge>
                   </div>
                 </div>
-               
+                <div className="p-2">
+                  {recipe.instructions}
+                </div>
               </div>
 
               {/* Footer actions */}
@@ -155,7 +121,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   </Button>
                 </Link>
                 <div className="space-x-4">
-                  <Button variant="secondary" className="cursor-pointer">
+                  <Button variant="secondary" className="cursor-pointer" disabled>
                     <Pencil />
                     Edit
                   </Button>
