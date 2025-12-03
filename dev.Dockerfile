@@ -3,7 +3,7 @@ FROM node:24.11.0-alpine
 WORKDIR /app
 
 COPY package*.json .
-RUN npm ci
+RUN npm install
 
 EXPOSE 3000
 
