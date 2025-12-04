@@ -40,7 +40,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Apple className="size-5" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-medium">TARMO</span>
+                  <span className="font-bold text-xl">TARMO</span>
                 </div>
               </Link>
             </SidebarMenuButton>
