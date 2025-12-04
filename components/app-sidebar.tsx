@@ -41,7 +41,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-medium">TARMO</span>
-                  <span className="">v0.0.1</span>
                 </div>
               </Link>
             </SidebarMenuButton>
