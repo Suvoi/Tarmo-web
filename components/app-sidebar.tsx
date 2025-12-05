@@ -1,8 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { Apple } from "lucide-react"
 import { BookText } from "lucide-react"
+import { Lexend } from "next/font/google"
 
 import {
   Sidebar,
@@ -16,6 +16,11 @@ import {
 import Link from "next/link"
 
 import { usePathname } from "next/navigation"
+
+const lexend = Lexend({
+  subsets: ["latin"],
+  weight: ["400"],
+});
 
 const data = {
   navMain: [
@@ -36,11 +41,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Apple className="size-5" />
+                <div className="flex aspect-square size-9 items-center justify-center rounded-lg">
+                  <img src="/tarmo.png" alt="" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-bold text-xl">TARMO</span>
+                  <span className={`font-bold text-3xl ${lexend.className}`}>
+                    TARMO
+                  </span>
                 </div>
               </Link>
             </SidebarMenuButton>
