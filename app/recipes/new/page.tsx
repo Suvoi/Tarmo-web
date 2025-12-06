@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { SubmitHandler, useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { recipeSchema, type Recipe } from '@/shared/schemas/recipe'
 
@@ -37,7 +37,14 @@ import {
 import { Spinner } from '@/components/ui/spinner'
 
 export default function Page() {
-  const { register, handleSubmit, reset, setValue, watch } = useForm<Recipe>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    watch,
+    formState: { errors },
+  } = useForm<Recipe>({
     resolver: zodResolver(recipeSchema),
     defaultValues: {
       name: '',
@@ -50,15 +57,12 @@ export default function Page() {
     },
   })
 
-  const unit = watch('unit')
-  const difficulty = watch('difficulty')
-
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const onSubmit = async (data: Recipe) => {
+  const onSubmit: SubmitHandler<Recipe> = async (data) => {
     setLoading(true)
-    console.log('checkpoint')
+    console.log('submitted', data)
     try {
       const res = await fetch('/api/recipes', {
         method: 'POST',
@@ -122,7 +126,9 @@ export default function Page() {
                     <Field>
                       <FieldLabel htmlFor='name'>Name</FieldLabel>
                       <Input id='name' {...register('name')} autoComplete='off' required />
+                      {errors.name && <p className='text-sm text-red-500'>Name is required</p>}
                     </Field>
+
                     <div className='flex items-end justify-between'>
                       <div className='flex items-end space-x-2'>
                         <Field className='w-1/3'>
@@ -134,51 +140,65 @@ export default function Page() {
                             autoComplete='off'
                             required
                           />
+                          {errors.quantity && (
+                            <p className='text-sm text-red-500'>Quantity is required</p>
+                          )}
                         </Field>
-                        <Select
-                          onValueChange={(value) =>
-                            setValue('unit', value, { shouldValidate: true })
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder='Unit' />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value='pcs'>Pieces</SelectItem>
-                            <SelectGroup>
-                              <SelectLabel>Weight</SelectLabel>
-                              <SelectItem value='mg'>mg</SelectItem>
-                              <SelectItem value='g'>g</SelectItem>
-                              <SelectItem value='kg'>kg</SelectItem>
-                            </SelectGroup>
-                            <SelectGroup>
-                              <SelectLabel>Volume</SelectLabel>
-                              <SelectItem value='ml'>ml</SelectItem>
-                              <SelectItem value='l'>l</SelectItem>
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
+
+                        <Controller
+                          name='unit'
+                          control={control}
+                          rules={{ required: true }}
+                          render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <SelectTrigger>
+                                <SelectValue placeholder='Unit' />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value='pcs'>Pieces</SelectItem>
+                                <SelectGroup>
+                                  <SelectLabel>Weight</SelectLabel>
+                                  <SelectItem value='mg'>mg</SelectItem>
+                                  <SelectItem value='g'>g</SelectItem>
+                                  <SelectItem value='kg'>kg</SelectItem>
+                                </SelectGroup>
+                                <SelectGroup>
+                                  <SelectLabel>Volume</SelectLabel>
+                                  <SelectItem value='ml'>ml</SelectItem>
+                                  <SelectItem value='l'>l</SelectItem>
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                        {errors.unit && <p className='text-sm text-red-500'>Unit is required</p>}
                       </div>
-                      <Select
-                        onValueChange={(value) =>
-                          setValue('difficulty', value, {
-                            shouldValidate: true,
-                          })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder='Difficulty' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value='Easy'>Easy</SelectItem>
-                          <SelectItem value='Medium'>Medium</SelectItem>
-                          <SelectItem value='Hard'>Hard</SelectItem>
-                        </SelectContent>
-                      </Select>
+
+                      <Controller
+                        name='difficulty'
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger>
+                              <SelectValue placeholder='Difficulty' />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value='Easy'>Easy</SelectItem>
+                              <SelectItem value='Medium'>Medium</SelectItem>
+                              <SelectItem value='Hard'>Hard</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      {errors.difficulty && (
+                        <p className='text-sm text-red-500'>Difficulty is required</p>
+                      )}
                     </div>
                   </div>
                 </div>
               </FieldGroup>
+
               <FieldGroup>
                 <Field>
                   <FieldLabel>Description</FieldLabel>
@@ -190,6 +210,7 @@ export default function Page() {
               </FieldGroup>
               <Input type='hidden' {...register('img_url')} />
             </FieldSet>
+
             <FieldSet className='w-1/2'>
               <Field>
                 <FieldLabel>Instructions</FieldLabel>
