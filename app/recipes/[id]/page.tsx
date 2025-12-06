@@ -104,7 +104,14 @@ export default function Page({ params }: { params: { id: string } }) {
               <div className='w-full flex-1'>
                 <div className='flex justify-between space-x-4'>
                   <div className='flex w-4/5 space-x-4'>
-                    <Image src={recipe.img_url} alt='' className='rounded-lg' />
+                    <Image
+                      src={recipe.img_url}
+                      alt=''
+                      className='rounded-lg'
+                      width='150'
+                      height='150'
+                      unoptimized
+                    />
                     <div className='flex flex-col justify-between'>
                       <div className=''>
                         <h1 className='text-3xl'>{recipe.name}</h1>

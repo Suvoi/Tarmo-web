@@ -120,7 +120,14 @@ export default function Page() {
               <FieldGroup>
                 <div className='flex items-start space-x-4'>
                   <Field className='size-[150px]'>
-                    <Image src={watch('img_url')} className='rounded-lg object-cover' alt='' />
+                    <Image
+                      src={watch('img_url')}
+                      className='rounded-lg object-cover'
+                      alt=''
+                      width='150'
+                      height='150'
+                      unoptimized
+                    />
                   </Field>
                   <div className='flex-1 space-y-2'>
                     <Field>

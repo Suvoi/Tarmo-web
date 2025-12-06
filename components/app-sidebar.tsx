@@ -43,8 +43,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size='lg' asChild>
               <Link href='/'>
-                <div className='flex aspect-square size-9 items-center justify-center rounded-lg'>
-                  <Image src='/tarmo.png' alt='' />
+                <div className='flex aspect-square items-center justify-center rounded-lg'>
+                  <Image src='/tarmo.png' alt='' width='34' height='34' />
                 </div>
                 <div className='flex flex-col gap-0.5 leading-none'>
                   <span className={`text-3xl font-bold ${lexend.className}`}>TARMO</span>
