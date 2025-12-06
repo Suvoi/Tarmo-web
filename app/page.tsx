@@ -1,6 +1,6 @@
-import { AppSidebar } from '@/components/app-sidebar';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { FlickeringGrid } from '@/components/ui/shadcn-io/flickering-grid';
+import { AppSidebar } from '@/components/app-sidebar'
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { FlickeringGrid } from '@/components/ui/shadcn-io/flickering-grid'
 
 export default function Page() {
   return (
@@ -30,5 +30,5 @@ export default function Page() {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  );
+  )
 }

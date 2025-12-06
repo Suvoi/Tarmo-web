@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const recipeSchema = z.object({
   id: z.number(),
@@ -9,6 +9,6 @@ export const recipeSchema = z.object({
   unit: z.string(),
   difficulty: z.string(),
   img_url: z.string().optional(),
-});
+})
 
-export type Recipe = z.infer<typeof recipeSchema>;
+export type Recipe = z.infer<typeof recipeSchema>

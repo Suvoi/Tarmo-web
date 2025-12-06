@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { AppSidebar } from '@/components/app-sidebar';
+import { AppSidebar } from '@/components/app-sidebar'
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -8,13 +8,13 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage,
-} from '@/components/ui/breadcrumb';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+} from '@/components/ui/breadcrumb'
+import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 import {
   Dialog,
@@ -25,24 +25,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/ui/dialog'
 
-import { ChevronLeft, Pencil, Trash2 } from 'lucide-react';
-import { Spinner } from '@/components/ui/spinner';
-import { Badge } from '@/components/ui/badge';
+import { ChevronLeft, Pencil, Trash2 } from 'lucide-react'
+import { Spinner } from '@/components/ui/spinner'
+import { Badge } from '@/components/ui/badge'
 
-import { Recipe } from '@/shared/schemas/recipe';
+import { Recipe } from '@/shared/schemas/recipe'
 
 export default function Page({ params }: { params: { id: string } }) {
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
-  const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const [recipe, setRecipe] = useState<Recipe | null>(null)
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
   async function deleteRecipe() {
     try {
-      await fetch(`/api/recipes/${params.id}`, { method: 'DELETE' });
+      await fetch(`/api/recipes/${params.id}`, { method: 'DELETE' })
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
   }
 
@@ -51,25 +51,23 @@ export default function Page({ params }: { params: { id: string } }) {
       try {
         const res = await fetch(`/api/recipes/${params.id}`, {
           cache: 'no-store',
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        setRecipe(data);
+        })
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data = await res.json()
+        setRecipe(data)
       } catch (err) {
-        console.error(err);
-        setRecipe(null);
+        console.error(err)
+        setRecipe(null)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
 
-    loadRecipe();
-  }, [params.id]);
+    loadRecipe()
+  }, [params.id])
 
   return (
-    <SidebarProvider
-      style={{ '--sidebar-width': '14rem' } as React.CSSProperties}
-    >
+    <SidebarProvider style={{ '--sidebar-width': '14rem' } as React.CSSProperties}>
       <AppSidebar />
       <SidebarInset className='flex flex-col justify-between'>
         {/* Breadcrumb */}
@@ -131,11 +129,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   </Button>
                 </Link>
                 <div className='space-x-4'>
-                  <Button
-                    variant='secondary'
-                    className='cursor-pointer'
-                    disabled
-                  >
+                  <Button variant='secondary' className='cursor-pointer' disabled>
                     <Pencil />
                     Edit
                   </Button>
@@ -150,21 +144,18 @@ export default function Page({ params }: { params: { id: string } }) {
                       <DialogHeader>
                         <DialogTitle>Delete Recipe?</DialogTitle>
                         <DialogDescription>
-                          This action cannot be undone. This will permanently
-                          delete this recipe.
+                          This action cannot be undone. This will permanently delete this recipe.
                         </DialogDescription>
                       </DialogHeader>
                       <DialogFooter className='flex justify-between!'>
-                        <DialogClose className='cursor-pointer'>
-                          Back
-                        </DialogClose>
+                        <DialogClose className='cursor-pointer'>Back</DialogClose>
                         <Button
                           onClick={() => {
-                            deleteRecipe();
-                            router.push('/recipes');
+                            deleteRecipe()
+                            router.push('/recipes')
                             toast.info(`Recipe Deleted`, {
                               description: `"${recipe.name}" has been permanently removed.`,
-                            });
+                            })
                           }}
                           variant='destructive'
                           className='cursor-pointer'
@@ -182,5 +173,5 @@ export default function Page({ params }: { params: { id: string } }) {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  );
+  )
 }

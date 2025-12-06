@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { recipeSchema, type Recipe } from '@/shared/schemas/recipe';
+import { useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { recipeSchema, type Recipe } from '@/shared/schemas/recipe'
 
-import { AppSidebar } from '@/components/app-sidebar';
+import { AppSidebar } from '@/components/app-sidebar'
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -13,16 +13,16 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage,
-} from '@/components/ui/breadcrumb';
-import { Textarea } from '@/components/ui/textarea';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { FieldSet, FieldGroup, Field, FieldLabel } from '@/components/ui/field';
-import Link from 'next/link';
-import { ChevronLeft } from 'lucide-react';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+} from '@/components/ui/breadcrumb'
+import { Textarea } from '@/components/ui/textarea'
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { FieldSet, FieldGroup, Field, FieldLabel } from '@/components/ui/field'
+import Link from 'next/link'
+import { ChevronLeft } from 'lucide-react'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 import {
   Select,
   SelectContent,
@@ -31,8 +31,8 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Spinner } from '@/components/ui/spinner';
+} from '@/components/ui/select'
+import { Spinner } from '@/components/ui/spinner'
 
 export default function Page() {
   const { register, handleSubmit, reset, setValue, watch } = useForm<Recipe>({
@@ -46,43 +46,41 @@ export default function Page() {
       difficulty: '',
       img_url: 'https://placehold.co/150',
     },
-  });
+  })
 
-  const unit = watch('unit');
-  const difficulty = watch('difficulty');
+  const unit = watch('unit')
+  const difficulty = watch('difficulty')
 
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const onSubmit = async (data: Recipe) => {
-    setLoading(true);
-    console.log('checkpoint');
+    setLoading(true)
+    console.log('checkpoint')
     try {
       const res = await fetch('/api/recipes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...data, quantity: Number(data.quantity) }),
-      });
+      })
 
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
-      router.push('/recipes');
-      toast.success('Recipe created successfully!');
-      reset();
+      router.push('/recipes')
+      toast.success('Recipe created successfully!')
+      reset()
     } catch (err) {
-      console.error('Failed to create recipe:', err);
+      console.error('Failed to create recipe:', err)
       toast.error(`There was an error connecting to the server.`, {
         description: 'Please try again later.',
-      });
+      })
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <SidebarProvider
-      style={{ '--sidebar-width': '14rem' } as React.CSSProperties}
-    >
+    <SidebarProvider style={{ '--sidebar-width': '14rem' } as React.CSSProperties}>
       <AppSidebar />
       <SidebarInset className='flex min-h-screen flex-col'>
         <header className='flex h-16 shrink-0 items-center gap-2 border-b px-4'>
@@ -111,29 +109,17 @@ export default function Page() {
         </div>
 
         <div className='flex-1 overflow-auto p-4'>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            id='recipe-form'
-            className='flex space-x-8'
-          >
+          <form onSubmit={handleSubmit(onSubmit)} id='recipe-form' className='flex space-x-8'>
             <FieldSet className='w-1/2'>
               <FieldGroup>
                 <div className='flex items-start space-x-4'>
                   <Field className='size-[150px]'>
-                    <img
-                      src={watch('img_url')}
-                      className='rounded-lg object-cover'
-                    />
+                    <img src={watch('img_url')} className='rounded-lg object-cover' />
                   </Field>
                   <div className='flex-1 space-y-2'>
                     <Field>
                       <FieldLabel htmlFor='name'>Name</FieldLabel>
-                      <Input
-                        id='name'
-                        {...register('name')}
-                        autoComplete='off'
-                        required
-                      />
+                      <Input id='name' {...register('name')} autoComplete='off' required />
                     </Field>
                     <div className='flex items-end justify-between'>
                       <div className='flex items-end space-x-2'>
@@ -218,16 +204,11 @@ export default function Page() {
           <Link href={'/recipes'}>
             <Button variant='outline'>Back</Button>
           </Link>
-          <Button
-            type='submit'
-            form='recipe-form'
-            disabled={loading}
-            className='cursor-pointer'
-          >
+          <Button type='submit' form='recipe-form' disabled={loading} className='cursor-pointer'>
             {loading ? <Spinner /> : 'Create'}
           </Button>
         </footer>
       </SidebarInset>
     </SidebarProvider>
-  );
+  )
 }

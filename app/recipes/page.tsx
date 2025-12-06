@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { AppSidebar } from '@/components/app-sidebar';
+import { useEffect, useState } from 'react'
+import { AppSidebar } from '@/components/app-sidebar'
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -9,19 +9,14 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
   BreadcrumbPage,
-} from '@/components/ui/breadcrumb';
-import { Card, CardContent } from '@/components/ui/card';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import Link from 'next/link';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import {
-  ChevronRight,
-  Inbox,
-  LucideReceiptRussianRuble,
-  Plus,
-} from 'lucide-react';
-import { Spinner } from '@/components/ui/spinner';
+} from '@/components/ui/breadcrumb'
+import { Card, CardContent } from '@/components/ui/card'
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import Link from 'next/link'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { ChevronRight, Inbox, LucideReceiptRussianRuble, Plus } from 'lucide-react'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Empty,
   EmptyContent,
@@ -29,38 +24,36 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty';
+} from '@/components/ui/empty'
 
-import { Recipe } from '@/shared/schemas/recipe';
+import { Recipe } from '@/shared/schemas/recipe'
 
 export default function Page() {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [recipes, setRecipes] = useState<Recipe[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function loadRecipes() {
       try {
-        const res = await fetch(`/api/recipes`, { cache: 'no-store' });
+        const res = await fetch(`/api/recipes`, { cache: 'no-store' })
 
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
-        const data = await res.json();
-        setRecipes(Array.isArray(data) ? data : data.recipes || []);
+        const data = await res.json()
+        setRecipes(Array.isArray(data) ? data : data.recipes || [])
       } catch (err) {
-        console.warn('API not available, ', err);
-        setRecipes([]);
+        console.warn('API not available, ', err)
+        setRecipes([])
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
 
-    loadRecipes();
-  }, []);
+    loadRecipes()
+  }, [])
 
   return (
-    <SidebarProvider
-      style={{ '--sidebar-width': '14rem' } as React.CSSProperties}
-    >
+    <SidebarProvider style={{ '--sidebar-width': '14rem' } as React.CSSProperties}>
       <AppSidebar />
       <SidebarInset className='flex h-screen flex-col'>
         <header className='flex h-16 shrink-0 items-center gap-2 border-b px-4'>
@@ -134,5 +127,5 @@ export default function Page() {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  );
+  )
 }
