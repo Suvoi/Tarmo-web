@@ -1,24 +1,24 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider"
-import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import Head from "next/head";
-import VersionTag from "@/components/VersionTag";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import { ThemeProvider } from '@/components/theme-provider';
+import './globals.css';
+import { Toaster } from '@/components/ui/sonner';
+import Head from 'next/head';
+import VersionTag from '@/components/VersionTag';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "Tarmo",
-  description: "Optimize and control batches with recipes.",
+  title: 'Tarmo',
+  description: 'Optimize and control batches with recipes.',
 };
 
 export default function RootLayout({
@@ -27,18 +27,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang='en' suppressHydrationWarning>
       <head>
-        <link rel="icon" type="image/svg+xml" href="/tarmo.png" />
+        <link rel='icon' type='image/svg+xml' href='/tarmo.png' />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
+          attribute='class'
+          defaultTheme='dark'
+          enableSystem
+          disableTransitionOnChange
         >
           <Toaster />
           <VersionTag />

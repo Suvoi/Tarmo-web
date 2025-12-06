@@ -1,55 +1,75 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
-import { AppSidebar } from "@/components/app-sidebar"
-import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb"
-import { Card, CardContent } from "@/components/ui/card"
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
-import Link from "next/link"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { ChevronRight, Inbox, LucideReceiptRussianRuble, Plus } from "lucide-react"
-import { Spinner } from "@/components/ui/spinner"
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
+import { useEffect, useState } from 'react';
+import { AppSidebar } from '@/components/app-sidebar';
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from '@/components/ui/breadcrumb';
+import { Card, CardContent } from '@/components/ui/card';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import Link from 'next/link';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import {
+  ChevronRight,
+  Inbox,
+  LucideReceiptRussianRuble,
+  Plus,
+} from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
 
-import { Recipe } from "@/shared/schemas/recipe"
+import { Recipe } from '@/shared/schemas/recipe';
 
 export default function Page() {
-  const [recipes, setRecipes] = useState<Recipe[]>([])
-  const [loading, setLoading] = useState(true)
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadRecipes() {
-
       try {
-        const res = await fetch(`/api/recipes`, { cache: "no-store" })
+        const res = await fetch(`/api/recipes`, { cache: 'no-store' });
 
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        const data = await res.json()
-        setRecipes(Array.isArray(data) ? data : data.recipes || [])
+        const data = await res.json();
+        setRecipes(Array.isArray(data) ? data : data.recipes || []);
       } catch (err) {
-        console.warn("API not available, ", err)
-        setRecipes([])
+        console.warn('API not available, ', err);
+        setRecipes([]);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
 
-    loadRecipes()
-  }, [])
+    loadRecipes();
+  }, []);
 
   return (
-    <SidebarProvider style={{ "--sidebar-width": "14rem" } as React.CSSProperties}>
+    <SidebarProvider
+      style={{ '--sidebar-width': '14rem' } as React.CSSProperties}
+    >
       <AppSidebar />
-      <SidebarInset className="flex flex-col h-screen">
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+      <SidebarInset className='flex h-screen flex-col'>
+        <header className='flex h-16 shrink-0 items-center gap-2 border-b px-4'>
           <Breadcrumb>
             <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              <BreadcrumbItem className='hidden md:block'>
+                <BreadcrumbLink href='/'>Home</BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbSeparator className='hidden md:block' />
               <BreadcrumbItem>
                 <BreadcrumbPage>Recipes</BreadcrumbPage>
               </BreadcrumbItem>
@@ -57,29 +77,29 @@ export default function Page() {
           </Breadcrumb>
         </header>
 
-        <div className="h-16 flex p-4 items-center space-x-2">
-          <Link href="/recipes/new">
-            <Button className="cursor-pointer">
-              <Plus/>
+        <div className='flex h-16 items-center space-x-2 p-4'>
+          <Link href='/recipes/new'>
+            <Button className='cursor-pointer'>
+              <Plus />
             </Button>
           </Link>
-          <Input className="w-1/3"placeholder="Search..."/>
+          <Input className='w-1/3' placeholder='Search...' />
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className='flex-1 overflow-y-auto p-4'>
           {loading ? (
-            <div className="h-full flex items-center justify-center">
-              <Spinner/>
+            <div className='flex h-full items-center justify-center'>
+              <Spinner />
             </div>
           ) : recipes?.length ? (
-            <div className="grid grid-cols-3 gap-2">
+            <div className='grid grid-cols-3 gap-2'>
               {recipes.map((recipe) => (
                 <Link key={recipe.id} href={`/recipes/${recipe.id}`}>
-                  <Card className="flex flex-col justify-between cursor-pointer hover:shadow-lg transition">
+                  <Card className='flex cursor-pointer flex-col justify-between transition hover:shadow-lg'>
                     <CardContent>
-                      <h3 className="text-lg font-semibold">{recipe.name}</h3>
-                      <p className="text-sm text-muted-foreground line-clamp-3">
-                        {recipe.description || "No description"}
+                      <h3 className='text-lg font-semibold'>{recipe.name}</h3>
+                      <p className='text-muted-foreground line-clamp-3 text-sm'>
+                        {recipe.description || 'No description'}
                       </p>
                     </CardContent>
                   </Card>
@@ -87,10 +107,10 @@ export default function Page() {
               ))}
             </div>
           ) : (
-            <div className="h-full flex items-center justify-center">
+            <div className='flex h-full items-center justify-center'>
               <Empty>
                 <EmptyHeader>
-                  <EmptyMedia variant="icon">
+                  <EmptyMedia variant='icon'>
                     <Inbox />
                   </EmptyMedia>
                   <EmptyTitle>
@@ -101,8 +121,8 @@ export default function Page() {
                   </EmptyDescription>
                 </EmptyHeader>
                 <EmptyContent>
-                  <Link href="/recipes/new">
-                    <Button className="cursor-pointer items-center">
+                  <Link href='/recipes/new'>
+                    <Button className='cursor-pointer items-center'>
                       Add recipe
                       <ChevronRight />
                     </Button>
@@ -114,5 +134,5 @@ export default function Page() {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }
