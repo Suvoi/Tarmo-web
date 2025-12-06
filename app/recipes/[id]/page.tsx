@@ -16,6 +16,8 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+import Image from 'next/image'
+
 import {
   Dialog,
   DialogClose,
@@ -102,7 +104,7 @@ export default function Page({ params }: { params: { id: string } }) {
               <div className='w-full flex-1'>
                 <div className='flex justify-between space-x-4'>
                   <div className='flex w-4/5 space-x-4'>
-                    <img src={recipe.img_url} alt='' className='rounded-lg' />
+                    <Image src={recipe.img_url} alt='' className='rounded-lg' />
                     <div className='flex flex-col justify-between'>
                       <div className=''>
                         <h1 className='text-3xl'>{recipe.name}</h1>

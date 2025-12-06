@@ -4,6 +4,8 @@ import * as React from 'react'
 import { BookText } from 'lucide-react'
 import { Lexend } from 'next/font/google'
 
+import Image from 'next/image'
+
 import {
   Sidebar,
   SidebarContent,
@@ -42,7 +44,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size='lg' asChild>
               <Link href='/'>
                 <div className='flex aspect-square size-9 items-center justify-center rounded-lg'>
-                  <img src='/tarmo.png' alt='' />
+                  <Image src='/tarmo.png' alt='' />
                 </div>
                 <div className='flex flex-col gap-0.5 leading-none'>
                   <span className={`text-3xl font-bold ${lexend.className}`}>TARMO</span>

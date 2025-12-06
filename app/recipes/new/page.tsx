@@ -5,6 +5,8 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { recipeSchema, type Recipe } from '@/shared/schemas/recipe'
 
+import Image from 'next/image'
+
 import { AppSidebar } from '@/components/app-sidebar'
 import {
   Breadcrumb,
@@ -114,7 +116,7 @@ export default function Page() {
               <FieldGroup>
                 <div className='flex items-start space-x-4'>
                   <Field className='size-[150px]'>
-                    <img src={watch('img_url')} className='rounded-lg object-cover' />
+                    <Image src={watch('img_url')} className='rounded-lg object-cover' alt='' />
                   </Field>
                   <div className='flex-1 space-y-2'>
                     <Field>
