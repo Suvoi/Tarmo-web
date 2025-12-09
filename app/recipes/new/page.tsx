@@ -51,8 +51,8 @@ export default function Page() {
       description: '',
       instructions: '',
       quantity: 0,
-      unit: '',
-      difficulty: '',
+      unit: 'pcs',
+      difficulty: 'Easy',
       img_url: 'https://placehold.co/150',
     },
   })
@@ -133,7 +133,6 @@ export default function Page() {
                     <Field>
                       <FieldLabel htmlFor='name'>Name</FieldLabel>
                       <Input id='name' {...register('name')} autoComplete='off' required />
-                      {errors.name && <p className='text-sm text-red-500'>Name is required</p>}
                     </Field>
 
                     <div className='flex items-end justify-between'>
@@ -224,6 +223,7 @@ export default function Page() {
                 <Textarea
                   className='min-h-[414px] resize-none overflow-y-auto'
                   {...register('instructions')}
+                  required
                 />
               </Field>
             </FieldSet>
