@@ -35,7 +35,7 @@ import { Badge } from '@/components/ui/badge'
 
 import { Recipe } from '@/shared/schemas/recipe'
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page({ params }: { params: { id: number } }) {
   const [recipe, setRecipe] = useState<Recipe | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
