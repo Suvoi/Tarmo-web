@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
-        <link rel='icon' type='image/svg+xml' href='/tarmo.png' />
+        <link rel='icon' type='image/svg+xml' href='/tarmo.png?v=0.1.1' />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute='class' defaultTheme='dark' enableSystem disableTransitionOnChange>
