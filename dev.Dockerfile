@@ -1,10 +1,6 @@
 FROM node:24.11.0-alpine
-
 WORKDIR /app
-
-COPY package*.json .
-RUN npm install
-
+COPY package.json yarn.lock .
+RUN yarn install --frozen-lockfile
 EXPOSE 3000
-
-CMD [ "npm", "run", "dev" ]
+CMD [ "yarn", "dev" ]
