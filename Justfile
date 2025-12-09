@@ -4,11 +4,8 @@ REPO  := "tarmo-web"
 IMAGE := "ghcr.io/{{OWNER}}/{{REPO}}"
 
 verify-branch:
-    current=$$(git rev-parse --abbrev-ref HEAD); \
-    if [ "$$current" != "main" ]; then \
-        echo "❌ You have to be on 'main' branch (currently in: $$current)"; \
-        exit 1; \
-    fi
+    branch=$$(git symbolic-ref --short HEAD); \
+    [ "$$branch" = "main" ] || { echo "❌ You have to be on 'main' branch (currently in: $$branch)"; exit 1; }
 
 lint:
     yarn lint
