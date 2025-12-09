@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import Image from 'next/image'
@@ -35,14 +35,16 @@ import { Badge } from '@/components/ui/badge'
 
 import { Recipe } from '@/shared/schemas/recipe'
 
-export default function Page({ params }: { params: { id: number } }) {
+export default function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
+
   const [recipe, setRecipe] = useState<Recipe | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   async function deleteRecipe() {
     try {
-      await fetch(`/api/recipes/${params.id}`, { method: 'DELETE' })
+      await fetch(`/api/recipes/${id}`, { method: 'DELETE' })
     } catch (err) {
       console.error(err)
     }
@@ -51,7 +53,7 @@ export default function Page({ params }: { params: { id: number } }) {
   useEffect(() => {
     async function loadRecipe() {
       try {
-        const res = await fetch(`/api/recipes/${params.id}`, {
+        const res = await fetch(`/api/recipes/${id}`, {
           cache: 'no-store',
         })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -66,7 +68,7 @@ export default function Page({ params }: { params: { id: number } }) {
     }
 
     loadRecipe()
-  }, [params.id])
+  }, [id])
 
   return (
     <SidebarProvider style={{ '--sidebar-width': '14rem' } as React.CSSProperties}>
