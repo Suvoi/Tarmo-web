@@ -3,10 +3,6 @@ REPO  := "tarmo-web"
 
 IMAGE := "ghcr.io/{{OWNER}}/{{REPO}}"
 
-verify-branch:
-    branch=$$(git symbolic-ref --short HEAD); \
-    [ "$$branch" = "main" ] || { echo "❌ You have to be on 'main' branch (currently in: $$branch)"; exit 1; }
-
 lint:
     yarn lint
 
@@ -29,7 +25,6 @@ docker-push version:
     docker push {{IMAGE}}:latest
 
 release version:
-    just verify-branch
     just lint
     just format
     just git-tag {{version}}
