@@ -1,14 +1,9 @@
-# Stage 1: Build
-FROM node:24.11.0-alpine AS build
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-
-# Stage 2: Serve
 FROM node:24.11.0-alpine
 WORKDIR /app
-COPY --from=build /app ./
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY .next .next
+COPY public public
+COPY next.config.ts next.config.ts
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["npx", "next", "start", "-p", "3000"]
