@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { SubmitHandler, useForm, Controller } from 'react-hook-form'
+import { SubmitHandler, useForm, Controller, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { recipeSchema, type Recipe } from '@/shared/schemas/recipe'
 
@@ -36,7 +36,28 @@ import {
 } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
 
+import StepsContainer from '@/app/recipes/new/components/StepsContainer'
+
 export default function Page() {
+  const form = useForm<Recipe>({
+    resolver: zodResolver(recipeSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      steps: [
+        {
+          order: 1,
+          name: '',
+          instructions: '',
+        },
+      ],
+      quantity: 0,
+      unit: 'pcs',
+      difficulty: 'Easy',
+      img_url: 'https://placehold.co/150',
+    },
+  })
+
   const {
     register,
     handleSubmit,
@@ -44,18 +65,7 @@ export default function Page() {
     control,
     watch,
     formState: { errors },
-  } = useForm<Recipe>({
-    resolver: zodResolver(recipeSchema),
-    defaultValues: {
-      name: '',
-      description: '',
-      instructions: '',
-      quantity: 0,
-      unit: 'pcs',
-      difficulty: 'Easy',
-      img_url: 'https://placehold.co/150',
-    },
-  })
+  } = form
 
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -88,7 +98,7 @@ export default function Page() {
   return (
     <SidebarProvider style={{ '--sidebar-width': '14rem' } as React.CSSProperties}>
       <AppSidebar />
-      <SidebarInset className='flex min-h-screen flex-col'>
+      <SidebarInset className='flex max-h-screen min-h-screen flex-col'>
         <header className='flex h-16 shrink-0 items-center gap-2 border-b px-4'>
           <Breadcrumb>
             <BreadcrumbList>
@@ -107,132 +117,122 @@ export default function Page() {
           </Breadcrumb>
         </header>
 
-        <div className='m-4 flex shrink-0 items-center space-x-2'>
-          <Link href='/recipes'>
-            <ChevronLeft />
-          </Link>
-          <h1 className='text-2xl font-bold'>New Recipe</h1>
-        </div>
-
         <div className='flex-1 overflow-auto p-4'>
-          <form onSubmit={handleSubmit(onSubmit)} id='recipe-form' className='flex space-x-8'>
-            <FieldSet className='w-1/2'>
-              <FieldGroup>
-                <div className='flex items-start space-x-4'>
-                  <Field className='size-[150px]'>
-                    <Image
-                      src={watch('img_url')}
-                      className='rounded-lg object-cover'
-                      alt=''
-                      width='150'
-                      height='150'
-                      unoptimized
-                    />
-                  </Field>
-                  <div className='flex-1 space-y-2'>
-                    <Field>
-                      <FieldLabel htmlFor='name'>Name</FieldLabel>
-                      <Input id='name' {...register('name')} autoComplete='off' required />
+          <FormProvider {...form}>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              id='recipe-form'
+              className='flex h-full space-x-8'
+            >
+              <FieldSet className='h-full w-2/5'>
+                <FieldGroup>
+                  <div className='flex items-start space-x-4'>
+                    <Field className='size-[150px]'>
+                      <Image
+                        src={watch('img_url')}
+                        className='rounded-lg object-cover'
+                        alt=''
+                        width='150'
+                        height='150'
+                        unoptimized
+                      />
                     </Field>
+                    <div className='flex-1 space-y-2'>
+                      <Field>
+                        <FieldLabel htmlFor='name'>Name</FieldLabel>
+                        <Input id='name' {...register('name')} autoComplete='off' required />
+                      </Field>
 
-                    <div className='flex items-end justify-between'>
-                      <div className='flex items-end space-x-2'>
-                        <Field className='w-1/3'>
-                          <FieldLabel htmlFor='quantity'>Quantity</FieldLabel>
-                          <Input
-                            id='quantity'
-                            type='number'
-                            {...register('quantity', { valueAsNumber: true })}
-                            autoComplete='off'
-                            required
+                      <div className='flex items-end justify-between'>
+                        <div className='flex items-end space-x-2'>
+                          <Field className='w-1/3'>
+                            <FieldLabel htmlFor='quantity'>Quantity</FieldLabel>
+                            <Input
+                              id='quantity'
+                              type='number'
+                              {...register('quantity', { valueAsNumber: true })}
+                              autoComplete='off'
+                              required
+                            />
+                            {errors.quantity && (
+                              <p className='text-sm text-red-500'>Quantity is required</p>
+                            )}
+                          </Field>
+
+                          <Controller
+                            name='unit'
+                            control={control}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                              <Select onValueChange={field.onChange} value={field.value}>
+                                <SelectTrigger>
+                                  <SelectValue placeholder='Unit' />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value='pcs'>Pieces</SelectItem>
+                                  <SelectGroup>
+                                    <SelectLabel>Weight</SelectLabel>
+                                    <SelectItem value='mg'>mg</SelectItem>
+                                    <SelectItem value='g'>g</SelectItem>
+                                    <SelectItem value='kg'>kg</SelectItem>
+                                  </SelectGroup>
+                                  <SelectGroup>
+                                    <SelectLabel>Volume</SelectLabel>
+                                    <SelectItem value='ml'>ml</SelectItem>
+                                    <SelectItem value='l'>l</SelectItem>
+                                  </SelectGroup>
+                                </SelectContent>
+                              </Select>
+                            )}
                           />
-                          {errors.quantity && (
-                            <p className='text-sm text-red-500'>Quantity is required</p>
-                          )}
-                        </Field>
+                          {errors.unit && <p className='text-sm text-red-500'>Unit is required</p>}
+                        </div>
 
                         <Controller
-                          name='unit'
+                          name='difficulty'
                           control={control}
                           rules={{ required: true }}
                           render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
                               <SelectTrigger>
-                                <SelectValue placeholder='Unit' />
+                                <SelectValue placeholder='Difficulty' />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value='pcs'>Pieces</SelectItem>
-                                <SelectGroup>
-                                  <SelectLabel>Weight</SelectLabel>
-                                  <SelectItem value='mg'>mg</SelectItem>
-                                  <SelectItem value='g'>g</SelectItem>
-                                  <SelectItem value='kg'>kg</SelectItem>
-                                </SelectGroup>
-                                <SelectGroup>
-                                  <SelectLabel>Volume</SelectLabel>
-                                  <SelectItem value='ml'>ml</SelectItem>
-                                  <SelectItem value='l'>l</SelectItem>
-                                </SelectGroup>
+                                <SelectItem value='Easy'>Easy</SelectItem>
+                                <SelectItem value='Medium'>Medium</SelectItem>
+                                <SelectItem value='Hard'>Hard</SelectItem>
                               </SelectContent>
                             </Select>
                           )}
                         />
-                        {errors.unit && <p className='text-sm text-red-500'>Unit is required</p>}
-                      </div>
-
-                      <Controller
-                        name='difficulty'
-                        control={control}
-                        rules={{ required: true }}
-                        render={({ field }) => (
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <SelectTrigger>
-                              <SelectValue placeholder='Difficulty' />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value='Easy'>Easy</SelectItem>
-                              <SelectItem value='Medium'>Medium</SelectItem>
-                              <SelectItem value='Hard'>Hard</SelectItem>
-                            </SelectContent>
-                          </Select>
+                        {errors.difficulty && (
+                          <p className='text-sm text-red-500'>Difficulty is required</p>
                         )}
-                      />
-                      {errors.difficulty && (
-                        <p className='text-sm text-red-500'>Difficulty is required</p>
-                      )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </FieldGroup>
+                </FieldGroup>
 
-              <FieldGroup>
-                <Field>
-                  <FieldLabel>Description</FieldLabel>
-                  <Textarea
-                    className='max-h-60 min-h-60 resize-none overflow-y-auto'
-                    {...register('description')}
-                  />
-                </Field>
-              </FieldGroup>
-              <Input type='hidden' {...register('img_url')} />
-            </FieldSet>
+                <FieldGroup className='flex min-h-0 flex-1 flex-col'>
+                  <Field className='flex flex-1 flex-col'>
+                    <FieldLabel>Description</FieldLabel>
+                    <Textarea className='h-full flex-1 resize-none' {...register('description')} />
+                  </Field>
+                </FieldGroup>
+              </FieldSet>
 
-            <FieldSet className='w-1/2'>
-              <Field>
-                <FieldLabel>Instructions</FieldLabel>
-                <Textarea
-                  className='min-h-[414px] resize-none overflow-y-auto'
-                  {...register('instructions')}
-                  required
-                />
-              </Field>
-            </FieldSet>
-          </form>
+              <FieldSet className='h-full w-3/5'>
+                <StepsContainer />
+              </FieldSet>
+            </form>
+          </FormProvider>
         </div>
 
         <footer className='flex shrink-0 items-center justify-between p-4'>
           <Link href={'/recipes'}>
-            <Button variant='outline'>Back</Button>
+            <Button variant='outline' className='cursor-pointer'>
+              Back
+            </Button>
           </Link>
           <Button type='submit' form='recipe-form' disabled={loading} className='cursor-pointer'>
             {loading ? <Spinner /> : 'Create'}
