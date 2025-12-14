@@ -59,6 +59,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data = await res.json()
         setRecipe(data)
+        console.log(data)
       } catch (err) {
         console.error(err)
         setRecipe(null)
@@ -128,7 +129,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     <Badge variant='secondary'>{recipe.difficulty}</Badge>
                   </div>
                 </div>
-                <div className='p-2'>{recipe.instructions}</div>
+                <div className='space-y-2 p-2'>
+                  {recipe.steps.map((step) => (
+                    <div key={step.order} className='rounded-md border p-2 shadow-sm'>
+                      <h3 className='font-semibold'>
+                        Step {step.order}: {step.name}
+                      </h3>
+                      {step.instructions && <p className='text-gray-600'>{step.instructions}</p>}
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Footer actions */}
