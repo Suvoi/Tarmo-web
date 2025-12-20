@@ -34,6 +34,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { Badge } from '@/components/ui/badge'
 
 import { Recipe } from '@/shared/schemas/recipe'
+import Steps from './components/Steps'
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -129,16 +130,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     <Badge variant='secondary'>{recipe.difficulty}</Badge>
                   </div>
                 </div>
-                <div className='space-y-2 p-2'>
-                  {recipe.steps.map((step) => (
-                    <div key={step.order} className='rounded-md border p-2 shadow-sm'>
-                      <h3 className='font-semibold'>
-                        Step {step.order}: {step.name}
-                      </h3>
-                      {step.instructions && <p className='text-gray-600'>{step.instructions}</p>}
-                    </div>
-                  ))}
-                </div>
+                <Steps steps={recipe.steps} />
+              </div>
+            </>
+          )}
               </div>
 
               {/* Footer actions */}
