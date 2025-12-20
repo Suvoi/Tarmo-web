@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { SubmitHandler, useForm, Controller, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { recipeSchema, type Recipe } from '@/shared/schemas/recipe'
+import { recipeFormSchema, type RecipeForm } from '@/shared/schemas/recipe'
 
 import Image from 'next/image'
 
@@ -39,14 +39,13 @@ import { Spinner } from '@/components/ui/spinner'
 import StepsContainer from '@/app/recipes/new/components/StepsContainer'
 
 export default function Page() {
-  const form = useForm<Recipe>({
-    resolver: zodResolver(recipeSchema),
+  const form = useForm<RecipeForm>({
+    resolver: zodResolver(recipeFormSchema),
     defaultValues: {
       name: '',
       description: '',
       steps: [
         {
-          order: 1,
           name: '',
           instructions: '',
         },
@@ -70,7 +69,7 @@ export default function Page() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const onSubmit: SubmitHandler<Recipe> = async (data) => {
+  const onSubmit: SubmitHandler<RecipeForm> = async (data) => {
     setLoading(true)
     console.log('submitted', data)
     try {
