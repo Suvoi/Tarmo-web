@@ -29,7 +29,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import { ChevronLeft, Pencil, Trash2 } from 'lucide-react'
+import { ChevronLeft, Trash2 } from 'lucide-react'
 import { Spinner } from '@/components/ui/spinner'
 import { Badge } from '@/components/ui/badge'
 
@@ -150,10 +150,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   </Button>
                 </Link>
                 <div className='space-x-4'>
-                  <Button variant='secondary' className='cursor-pointer' disabled>
-                    <Pencil />
-                    Edit
-                  </Button>
                   <Dialog>
                     <DialogTrigger>
                       <Button variant='destructive' className='cursor-pointer'>
