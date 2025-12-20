@@ -1,7 +1,7 @@
 FROM node:24.11.0-alpine
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN yarn install --immutable --production
 COPY .next .next
 COPY public public
 COPY next.config.ts next.config.ts
