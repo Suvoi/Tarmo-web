@@ -75,7 +75,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   return (
     <SidebarProvider style={{ '--sidebar-width': '14rem' } as React.CSSProperties}>
       <AppSidebar />
-      <SidebarInset className='flex flex-col justify-between'>
+      <SidebarInset className='flex h-screen flex-col'>
         {/* Breadcrumb */}
         <header className='flex h-16 shrink-0 items-center gap-2 border-b px-4'>
           <Breadcrumb>
@@ -98,14 +98,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         </header>
 
         {/* Main content */}
-        <div className='flex h-full flex-col items-center justify-center p-4'>
+        <div className='flex flex-1 flex-col overflow-y-scroll p-4'>
           {loading ? (
             <Spinner />
           ) : !recipe ? (
             <h1 className='text-xl font-medium'>Recipe not found</h1>
           ) : (
             <>
-              <div className='w-full flex-1'>
+              <div className='w-full flex-1 space-y-4'>
                 <div className='flex justify-between space-x-4'>
                   <div className='flex w-4/5 space-x-4'>
                     <Image
@@ -134,55 +134,52 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               </div>
             </>
           )}
-              </div>
-
-              {/* Footer actions */}
-              <div className='flex h-16 w-full items-center justify-between text-lg underline'>
-                <Link href='/recipes'>
-                  <Button variant='outline' className='cursor-pointer'>
-                    <ChevronLeft />
-                    Back
-                  </Button>
-                </Link>
-                <div className='space-x-4'>
-                  <Dialog>
-                    <DialogTrigger>
-                      <Button variant='destructive' className='cursor-pointer'>
-                        <Trash2 />
-                        Delete
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Delete Recipe?</DialogTitle>
-                        <DialogDescription>
-                          This action cannot be undone. This will permanently delete this recipe.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <DialogFooter className='flex justify-between!'>
-                        <DialogClose className='cursor-pointer'>Back</DialogClose>
-                        <Button
-                          onClick={() => {
-                            deleteRecipe()
-                            router.push('/recipes')
-                            toast.info(`Recipe Deleted`, {
-                              description: `"${recipe.name}" has been permanently removed.`,
-                            })
-                          }}
-                          variant='destructive'
-                          className='cursor-pointer'
-                        >
-                          <Trash2 />
-                          Delete
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-              </div>
-            </>
-          )}
         </div>
+
+        {/* Footer actions */}
+        <footer className='flex h-16 w-full items-center justify-between p-4 text-lg underline'>
+          <Link href='/recipes'>
+            <Button variant='outline' className='cursor-pointer'>
+              <ChevronLeft />
+              Back
+            </Button>
+          </Link>
+          <div className='space-x-4'>
+            <Dialog>
+              <DialogTrigger>
+                <Button variant='destructive' className='cursor-pointer'>
+                  <Trash2 />
+                  Delete
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Delete Recipe?</DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone. This will permanently delete this recipe.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter className='flex justify-between!'>
+                  <DialogClose className='cursor-pointer'>Back</DialogClose>
+                  <Button
+                    onClick={() => {
+                      deleteRecipe()
+                      router.push('/recipes')
+                      toast.info(`Recipe Deleted`, {
+                        description: `"${recipe?.name}" has been permanently removed.`,
+                      })
+                    }}
+                    variant='destructive'
+                    className='cursor-pointer'
+                  >
+                    <Trash2 />
+                    Delete
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </footer>
       </SidebarInset>
     </SidebarProvider>
   )
