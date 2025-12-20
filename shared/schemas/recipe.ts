@@ -1,11 +1,11 @@
 import { z } from 'zod'
-import { stepSchema } from './step'
+import { stepFormSchema } from './step'
 
 export const recipeSchema = z.object({
   id: z.number().optional(),
   name: z.string().min(1),
   description: z.string().optional(),
-  steps: z.array(stepSchema),
+  steps: z.array(stepFormSchema),
   quantity: z.number().min(0),
   unit: z.string(),
   difficulty: z.string(),

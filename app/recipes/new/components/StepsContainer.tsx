@@ -18,7 +18,6 @@ export default function StepsContainer() {
 
   const handleAddStep = () => {
     append({
-      order: fields.length + 1,
       name: '',
       instructions: '',
     })
@@ -58,7 +57,6 @@ export default function StepsContainer() {
                 </Field>
               </FieldGroup>
 
-              {/* controles */}
               <div className='flex flex-col justify-between p-2'>
                 <Button
                   type='button'
