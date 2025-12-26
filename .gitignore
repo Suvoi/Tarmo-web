@@ -20,9 +20,6 @@
 # production
 /build
 
-# cache
-.eslintcache
-
 # misc
 .DS_Store
 *.pem
