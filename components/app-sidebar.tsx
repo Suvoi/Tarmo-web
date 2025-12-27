@@ -12,11 +12,22 @@ import {
 import { Lexend } from 'next/font/google'
 import Link from "next/link"
 import Image from 'next/image'
+import { NotebookText } from "lucide-react"
 
 const lexend = Lexend({
   subsets: ['latin'],
   weight: ['400'],
 })
+
+const data = {
+  navMain: [
+    {
+      title: 'Recipes',
+      url: '/recipes',
+      icon: NotebookText,
+    },
+  ],
+}
 
 export function AppSidebar() {
   return (
@@ -38,8 +49,22 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup />
-        <SidebarGroup />
+        <SidebarGroup>
+          <SidebarMenu>
+            {data.navMain.map((item) => {
+              const Icon = item.icon
+              return (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <Link href={item.url} className='font-medium'>
+                      <Icon className='size-5' /> {item.title}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )
+            })}
+          </SidebarMenu>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter />
     </Sidebar>
