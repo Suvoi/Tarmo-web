@@ -4,7 +4,7 @@ const API_URL = "http://localhost:9136/"
 
 const mode = process.env.NEXT_PUBLIC_API_MODE ?? "real"
 
-function generateMockRecipes(count = 47): Recipe[] {
+function generateMockRecipes(count = 0): Recipe[] {
   return Array.from({ length: count }, (_, i) => ({
     id: i + 1,
     name: `Recipe ${i + 1}`,
