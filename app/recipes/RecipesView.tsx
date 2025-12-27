@@ -15,6 +15,10 @@ import {
   ItemHeader,
   ItemTitle,
 } from "@/components/ui/item"
+import { Inbox } from "lucide-react"
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 const fetcher = () => getRecipes()
 
@@ -40,12 +44,32 @@ export default function RecipesView({ initial }: {initial: Recipe[] }) {
 
   return (
     <motion.div
-     className="flex h-full w-full flex-col gap-6 p-4 pt-2"
+     className="h-full w-full flex-col p-4 pt-2"
      variants={containerVariants}
       initial="hidden"
       animate="show"
     >
-      <ItemGroup className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+      { data.length==0 ? (
+        <div className="flex items-center justify-center h-full">
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <Inbox />
+              </EmptyMedia>
+              <EmptyTitle className="text-xl">Looks a bit empty…</EmptyTitle>
+              <EmptyDescription className="text-lg">
+                Add a recipe to start building your collection.
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent>
+              <Button asChild size="lg">
+                <Link href="/recipes/new">Add a recipe</Link>
+              </Button>
+            </EmptyContent>
+          </Empty>
+        </div>
+      ) : (
+        <ItemGroup className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
         {data.map((recipe) => (
           <motion.div
             key={recipe.name}
@@ -71,6 +95,9 @@ export default function RecipesView({ initial }: {initial: Recipe[] }) {
           </motion.div>
         ))}
       </ItemGroup>
+      )
+
+      }
     </motion.div>
   )
 }
