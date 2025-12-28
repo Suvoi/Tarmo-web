@@ -1,17 +1,17 @@
 "use client"
 
 import { useRecipeFormStore } from "@/store/recipe-form-store"
-import { MetadataStage } from "./stages/MetadataStage"  // ← cambio: era MetadataStep
-//import { StepsStage } from "./stages/StepsStage"  // ← cambio
-//import { OverviewStage } from "./stages/OverviewStage"  // ← cambio
+import { MetadataStage } from "./stages/MetadataStage"
+import { StepsStage } from "./stages/StepsStage"
+import { OverviewStage } from "./stages/OverviewStage"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
-const STAGES = [  // ← cambio: era STEPS
-  { id: 0, name: "General info", component: MetadataStage },
-  //{ id: 1, name: "Steps", component: StepsStage },
-  //{ id: 2, name: "Overview", component: OverviewStage },
+const STAGES = [
+  { id: 0, name: "General", component: MetadataStage },
+  { id: 1, name: "Steps", component: StepsStage },
+  { id: 2, name: "Overview", component: OverviewStage },
 ]
 
 export function RecipeFormWrapper() {
