@@ -1,12 +1,12 @@
 import { create } from 'zustand'
-import { RecipeForm } from '@/shared/schemas/recipe'
+import { Recipe } from '@/shared/schemas/recipe'
 
 type RecipeFormStore = {
   currentStage: number
-  formData: Partial<RecipeForm>
+  formData: Partial<Recipe>
   
   setCurrentStage: (stage: number) => void
-  updateFormData: (data: Partial<RecipeForm>) => void
+  updateFormData: (data: Partial<Recipe>) => void
   resetForm: () => void
   canGoToStage: (targetStage: number) => boolean
 }

@@ -1,13 +1,8 @@
 import { z } from 'zod'
 
-export const stepFormSchema = z.object({
+export const stepSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  instructions: z.string().optional(),
+  instructions: z.string().optional().default(""),
 })
 
-export const stepSchema = stepFormSchema.extend({
-  order: z.number().int(),
-})
-
-export type FormStep = z.infer<typeof stepFormSchema>
 export type Step = z.infer<typeof stepSchema>

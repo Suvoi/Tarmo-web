@@ -1,18 +1,7 @@
 import { z } from 'zod'
-import { stepSchema, stepFormSchema } from './step'
-
-export const recipeFormSchema = z.object({
-  name: z.string().min(1),
-  description: z.string().optional(),
-  steps: z.array(stepFormSchema),
-  quantity: z.number().min(0),
-  unit: z.string(),
-  difficulty: z.string(),
-  img_url: z.string().url(),
-})
+import { stepSchema } from './step'
 
 export const recipeSchema = z.object({
-  id: z.number(),
   name: z.string().min(1),
   description: z.string().optional(),
   steps: z.array(stepSchema),
@@ -22,5 +11,9 @@ export const recipeSchema = z.object({
   img_url: z.string().url(),
 })
 
+export const recipeWithIdSchema = recipeSchema.extend({
+  id: z.number(),
+})
+
 export type Recipe = z.infer<typeof recipeSchema>
-export type RecipeForm = z.infer<typeof recipeFormSchema>
+export type RecipeWithId = z.infer<typeof recipeWithIdSchema>
