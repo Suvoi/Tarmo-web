@@ -84,7 +84,7 @@ export function MetadataStage() {
       
       {/* Description */}
       <Field>
-        <FieldLabel>Description *</FieldLabel>
+        <FieldLabel>Description</FieldLabel>
         <Textarea 
           className="max-h-40" 
           placeholder="Delicious yummy pizza..."
