@@ -3,8 +3,10 @@ import { useRecipeFormStore } from "@/store/recipe-form-store"
 import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Field, FieldLabel } from "@/components/ui/field"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Button } from "@/components/ui/button"
+import { ButtonGroup } from "@/components/ui/button-group"
+import { Plus, Trash } from "lucide-react"
 
 export function StepsStage() {
   const { formData, updateFormData } = useRecipeFormStore()
@@ -26,6 +28,17 @@ export function StepsStage() {
     const newStep = { name: "", instructions: "" }
     updateFormData({ steps: [...(formData.steps || []), newStep] })
     setEditingIndex((formData.steps || []).length)
+  }
+
+  const removeStep = (index: number) => {
+    const updatedSteps = formData.steps?.filter((_, i) => i !== index) || []
+    updateFormData({ steps: updatedSteps })
+    
+    if (editingIndex === index) {
+      setEditingIndex(null)
+    } else if (editingIndex !== null && editingIndex > index) {
+      setEditingIndex(editingIndex - 1)
+    }
   }
   
   return (
@@ -56,38 +69,47 @@ export function StepsStage() {
         </div>
         
         {/* ADD STEP BUTTON */}
-        <Button onClick={addStep} variant="outline" className="w-full shrink-0">
-          + Add Step
+        <Button onClick={addStep} variant="ghost">
+          <Plus />
+          Add Step
         </Button>
       </div>
       
       {/* RIGHT PANEL - FORM */}
-      <div className="border rounded-lg p-4 flex flex-col gap-4 overflow-y-auto">
-        <h3 className="font-semibold shrink-0">
+      <div className="border rounded-lg p-4 flex flex-col gap-4 overflow-y-auto justify-between">
+        <h3 className="font-semibold">
           {editingIndex !== null ? `Edit Step ${editingIndex + 1}` : "New Step"}
         </h3>
         
+        {/* NEW STEP FORM */}
         {editingIndex !== null ? (
           <>
-            <Field>
-              <FieldLabel>Step Name *</FieldLabel>
-              <Input 
-                placeholder="e.g. Preheat oven"
-                value={currentName}
-                onChange={(e) => updateStep(editingIndex, 'name', e.target.value)}
-              />
-            </Field>
-            
-            <Field>
-              <FieldLabel>Instructions</FieldLabel>
-              <Textarea 
-                placeholder="Detailed instructions..."
-                value={currentInstructions || ""}
-                onChange={(e) => updateStep(editingIndex, 'instructions', e.target.value)}
-                rows={8}
-                className="max-h-32 overflow-y-auto"
-              />
-            </Field>
+            <FieldGroup>
+              <Field>
+                <FieldLabel>Step Name *</FieldLabel>
+                <Input 
+                  placeholder="e.g. Preheat oven"
+                  value={currentName}
+                  onChange={(e) => updateStep(editingIndex, 'name', e.target.value)}
+                />
+              </Field>
+              
+              <Field>
+                <FieldLabel>Instructions</FieldLabel>
+                <Textarea 
+                  placeholder="Detailed instructions..."
+                  value={currentInstructions || ""}
+                  onChange={(e) => updateStep(editingIndex, 'instructions', e.target.value)}
+                  rows={8}
+                  className="max-h-28 overflow-y-auto"
+                />
+              </Field>
+            </FieldGroup>
+
+            <Button variant="destructive" onClick={() => removeStep(editingIndex!)}>
+              <Trash />
+              Delete
+            </Button>
           </>
         ) : (
           <p className="text-muted-foreground text-center py-8">
