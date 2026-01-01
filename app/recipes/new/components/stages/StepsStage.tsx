@@ -29,7 +29,7 @@ export function StepsStage() {
   }
   
   return (
-    <div className="w-full max-w-4xl mx-auto grid grid-cols-2 gap-4 h-full">
+    <div className="w-full max-w-4xl grid grid-cols-2 gap-4 h-4/5">
 
       {/* LEFT PANEL*/}
       <div className="border rounded-lg p-4 flex flex-col gap-2 overflow-hidden">
@@ -85,6 +85,7 @@ export function StepsStage() {
                 value={currentInstructions || ""}
                 onChange={(e) => updateStep(editingIndex, 'instructions', e.target.value)}
                 rows={8}
+                className="max-h-32 overflow-y-auto"
               />
             </Field>
           </>
