@@ -4,13 +4,17 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import StepForm from "@/components/recipes/form/step-form"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { useIsMobile } from "@/hooks/use-mobile"
 
 export function StepsStage() {
   const { formData, addStep } = useRecipeFormStore()
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const isMobile = useIsMobile()
   
   return (
-    <div className="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4 h-4/5">
+    <div className="w-full h-full sm:h-4/5 sm:max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
 
       {/* LEFT PANEL*/}
       <div className="border rounded-lg p-4 flex flex-col gap-2 overflow-hidden">
@@ -21,7 +25,11 @@ export function StepsStage() {
           {formData.steps?.map((step, index) => (
             <div 
               key={index}
-              onClick={() => setEditingIndex(index)}
+              onClick={() => {
+                setEditingIndex(index)
+
+                if (isMobile) setIsSheetOpen(true)}
+              }
               className={`p-3 rounded border cursor-pointer hover:bg-muted transition-colors ${
                 editingIndex === index ? 'bg-muted border-primary' : ''
               }`}
@@ -44,14 +52,20 @@ export function StepsStage() {
       </div>
       
       {/* RIGHT PANEL - FORM */}
-      <div className="border rounded-lg p-4 flex flex-col gap-4 overflow-y-auto justify-between">
+
+      {/* LARGE SCREENS */}
+      <div className="border rounded-lg p-4 hidden sm:flex flex-col gap-4 overflow-y-auto justify-between">
         <h3 className="font-semibold">
           {editingIndex !== null ? `Edit Step ${editingIndex + 1}` : "New Step"}
         </h3>
         
         {/* NEW STEP FORM */}
         {editingIndex !== null ? (
-          <StepForm editingIndex={editingIndex} setEditingIndex={setEditingIndex}/>
+          <StepForm
+            editingIndex={editingIndex}
+            setEditingIndex={setEditingIndex}
+            setIsSheetOpen={setIsSheetOpen}
+            />
         ) : (
           <div className="flex items-center justify-center h-full">
             <p className="text-muted-foreground text-center">
@@ -59,6 +73,26 @@ export function StepsStage() {
             </p>
           </div>
         )}
+      </div>
+
+      {/* SHEET (mobile) */}
+      <div className="sm:hidden">
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+          <SheetContent side="bottom" className="p-4">
+            <SheetHeader>
+              <SheetTitle>
+                {editingIndex !== null ? `Edit Step ${editingIndex + 1}` : "New Step"}
+              </SheetTitle>
+            </SheetHeader>
+            {editingIndex !== null && (
+              <StepForm 
+                editingIndex={editingIndex}
+                setEditingIndex={setEditingIndex}
+                setIsSheetOpen={setIsSheetOpen}
+              />
+            )}
+          </SheetContent>
+        </Sheet>
       </div>
       
     </div>

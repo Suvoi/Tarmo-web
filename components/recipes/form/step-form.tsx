@@ -8,9 +8,10 @@ import { useRecipeFormStore } from "@/store/recipe-form-store";
 interface StepFormProps {
   editingIndex: number
   setEditingIndex: (index: number | null) => void
+  setIsSheetOpen: (open: boolean) => void
 }
 
-export default function StepForm({ editingIndex, setEditingIndex }: StepFormProps) {
+export default function StepForm({ editingIndex, setEditingIndex, setIsSheetOpen }: StepFormProps) {
   const { formData, updateStep, removeStep } = useRecipeFormStore()
   
   const currentName = formData.steps?.[editingIndex]?.name || ""
@@ -43,6 +44,7 @@ export default function StepForm({ editingIndex, setEditingIndex }: StepFormProp
       <Button variant="destructive" onClick={() => {
         removeStep(editingIndex)
         setEditingIndex(null)
+        setIsSheetOpen(false)
       }}>
         <Trash />
         Delete
