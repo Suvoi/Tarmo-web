@@ -112,9 +112,11 @@ export function StepsStage() {
             </Button>
           </>
         ) : (
-          <p className="text-muted-foreground text-center py-8">
-            Select a step from the list or add a new one
-          </p>
+          <div className="flex items-center justify-center h-full">
+            <p className="text-muted-foreground text-center">
+              Select a step from the list or add a new one
+            </p>
+          </div>
         )}
       </div>
       
