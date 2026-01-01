@@ -1,48 +1,16 @@
 "use client"
 import { useRecipeFormStore } from "@/store/recipe-form-store"
 import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Button } from "@/components/ui/button"
-import { ButtonGroup } from "@/components/ui/button-group"
-import { Plus, Trash } from "lucide-react"
+import { Plus } from "lucide-react"
+import StepForm from "@/components/recipes/form/step-form"
 
 export function StepsStage() {
-  const { formData, updateFormData } = useRecipeFormStore()
+  const { formData, addStep } = useRecipeFormStore()
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   
-  const currentName = editingIndex !== null ? formData.steps?.[editingIndex]?.name : ""
-  const currentInstructions = editingIndex !== null ? formData.steps?.[editingIndex]?.instructions : ""
-  
-  const updateStep = (index: number, field: 'name' | 'instructions', value: string) => {
-    const updatedSteps = [...(formData.steps || [])]
-    updatedSteps[index] = {
-      ...updatedSteps[index],
-      [field]: value
-    }
-    updateFormData({ steps: updatedSteps })
-  }
-  
-  const addStep = () => {
-    const newStep = { name: "", instructions: "" }
-    updateFormData({ steps: [...(formData.steps || []), newStep] })
-    setEditingIndex((formData.steps || []).length)
-  }
-
-  const removeStep = (index: number) => {
-    const updatedSteps = formData.steps?.filter((_, i) => i !== index) || []
-    updateFormData({ steps: updatedSteps })
-    
-    if (editingIndex === index) {
-      setEditingIndex(null)
-    } else if (editingIndex !== null && editingIndex > index) {
-      setEditingIndex(editingIndex - 1)
-    }
-  }
-  
   return (
-    <div className="w-full max-w-4xl grid grid-cols-2 gap-4 h-4/5">
+    <div className="w-full max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4 h-4/5">
 
       {/* LEFT PANEL*/}
       <div className="border rounded-lg p-4 flex flex-col gap-2 overflow-hidden">
@@ -69,7 +37,7 @@ export function StepsStage() {
         </div>
         
         {/* ADD STEP BUTTON */}
-        <Button onClick={addStep} variant="ghost">
+        <Button variant="ghost" onClick={addStep}>
           <Plus />
           Add Step
         </Button>
@@ -83,34 +51,7 @@ export function StepsStage() {
         
         {/* NEW STEP FORM */}
         {editingIndex !== null ? (
-          <>
-            <FieldGroup>
-              <Field>
-                <FieldLabel>Step Name *</FieldLabel>
-                <Input 
-                  placeholder="e.g. Preheat oven"
-                  value={currentName}
-                  onChange={(e) => updateStep(editingIndex, 'name', e.target.value)}
-                />
-              </Field>
-              
-              <Field>
-                <FieldLabel>Instructions</FieldLabel>
-                <Textarea 
-                  placeholder="Detailed instructions..."
-                  value={currentInstructions || ""}
-                  onChange={(e) => updateStep(editingIndex, 'instructions', e.target.value)}
-                  rows={8}
-                  className="max-h-28 overflow-y-auto"
-                />
-              </Field>
-            </FieldGroup>
-
-            <Button variant="destructive" onClick={() => removeStep(editingIndex!)}>
-              <Trash />
-              Delete
-            </Button>
-          </>
+          <StepForm editingIndex={editingIndex} setEditingIndex={setEditingIndex}/>
         ) : (
           <div className="flex items-center justify-center h-full">
             <p className="text-muted-foreground text-center">
