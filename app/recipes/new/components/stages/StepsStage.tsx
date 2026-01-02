@@ -19,9 +19,9 @@ export function StepsStage() {
     <div className="w-full h-full sm:max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
 
       {/* LEFT PANEL*/}
-      <div className="p-4 flex flex-col gap-2 overflow-hidden">
-        <h3 className="font-semibold mb-2 shrink-0">Steps ({formData.steps?.length || 0})</h3>
-        
+      <div className="py-4 flex flex-col gap-2 overflow-hidden">
+        <h3 className="font-semibold text-2xl mb-2 shrink-0">Steps ({formData.steps?.length || 0})</h3>
+
         {/* STEP LIST */}
         <div className="space-y-2 flex-1 overflow-y-auto min-h-0">
           {formData.steps?.map((step, index) => (
@@ -36,9 +36,9 @@ export function StepsStage() {
               size="default"
             >
               <ItemContent>
-                <ItemTitle className="text-lg">{index + 1}. {step.name || "(Unnamed)"}</ItemTitle>
+                <ItemTitle className="text-xl">{index + 1}. {step.name || "(Unnamed)"}</ItemTitle>
                 {step.instructions && (
-                  <ItemDescription className="overflow-x-hidden">
+                  <ItemDescription className="overflow-x-hidden text-lg">
                     {step.instructions}
                   </ItemDescription>
                 )}
