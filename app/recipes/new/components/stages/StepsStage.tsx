@@ -78,7 +78,7 @@ export function StepsStage() {
       {/* SHEET (mobile) */}
       <div className="sm:hidden">
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-          <SheetContent side="bottom" className="p-4">
+          <SheetContent side="right" className="p-4">
             <SheetHeader>
               <SheetTitle>
                 {editingIndex !== null ? `Edit Step ${editingIndex + 1}` : "New Step"}

@@ -22,7 +22,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <SidebarProvider>
             <AppSidebar />
-            <main className="h-screen w-full relative overflow-hidden">
+            <main className="h-dvh w-full relative overflow-hidden">
               {children}       
             </main>
           </SidebarProvider>
