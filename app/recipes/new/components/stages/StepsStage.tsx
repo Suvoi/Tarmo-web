@@ -2,15 +2,15 @@
 import { useRecipeFormStore } from "@/store/recipe-form-store"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { ChevronDown, ChevronUp, Plus } from "lucide-react"
 import StepForm from "@/components/recipes/form/step-form"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item"
-import { Separator } from "@/components/ui/separator"
+import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item"
+import { ButtonGroup } from "@/components/ui/button-group"
 
 export function StepsStage() {
-  const { formData, addStep } = useRecipeFormStore()
+  const { formData, addStep, moveStepDown, moveStepUp } = useRecipeFormStore()
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const isMobile = useIsMobile()
@@ -43,6 +43,28 @@ export function StepsStage() {
                   </ItemDescription>
                 )}
               </ItemContent>
+              <ItemActions>
+                <ButtonGroup>
+                  <Button 
+                    size="icon-sm"
+                    variant="ghost"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      moveStepUp(index)
+                    }}
+                    disabled={index === 0}
+                  ><ChevronUp /></Button>
+                  <Button 
+                    size="icon-sm"
+                    variant="ghost"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      moveStepDown(index)
+                    }}
+                    disabled={index === formData.steps.length - 1}
+                  ><ChevronDown /></Button>
+                </ButtonGroup>
+              </ItemActions>
             </Item>
           ))}
         </div>
