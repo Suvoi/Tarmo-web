@@ -1,4 +1,4 @@
-import { Recipe, recipeSchema } from "@/shared/schemas/recipe"
+import { Recipe, recipeWithIdSchema } from "@/shared/schemas/recipe"
 
 const API_URL = "http://localhost:9136"
 
@@ -19,15 +19,39 @@ function generateMockRecipes(count = 0): Recipe[] {
 
 export async function getRecipes(): Promise<Recipe[]> {
   if (mode === "mock") {
-    return recipeSchema.array().parse(generateMockRecipes())
+    return recipeWithIdSchema.array().parse(generateMockRecipes())
   }
 
   try {
-    const res = await fetch(`${API_URL}/recipes`, { cache: "no-store" })
+    const res = await fetch(`${API_URL}/recipes/`, { cache: "no-store" })
     if (!res.ok) throw new Error("Could not connect to the API")
     const data = await res.json()
-    return recipeSchema.array().parse(data)
+    return recipeWithIdSchema.array().parse(data)
   } catch {
-    return recipeSchema.array().parse([])
+    return recipeWithIdSchema.array().parse([])
+  }
+}
+
+export async function createRecipe(recipe: Recipe) {
+  if (mode === "mock") {
+    console.log(`MOCK MODE, DEBUG: ${recipe}`)
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/recipes/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(recipe),
+      cache: "no-store",
+    })
+
+    if (!res.ok) {
+      throw new Error("Could not create recipe")
+    }
+
+  } catch (error) {
+    throw new Error("Failed to create recipe")
   }
 }

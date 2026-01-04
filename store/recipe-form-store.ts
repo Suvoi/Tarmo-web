@@ -14,6 +14,7 @@ type RecipeFormStore = {
   moveStepDown: (index: number) => void
   resetForm: () => void
   canGoToStage: (targetStage: number) => boolean
+  getRecipeData: () => Recipe
 }
 
 export const useRecipeFormStore = create<RecipeFormStore>((set, get) => ({
@@ -105,5 +106,10 @@ export const useRecipeFormStore = create<RecipeFormStore>((set, get) => ({
     } catch {
       return false
     }
+  },
+
+  getRecipeData: () => {
+    const { formData } = get()
+    return recipeSchema.parse(formData)
   },
 }))

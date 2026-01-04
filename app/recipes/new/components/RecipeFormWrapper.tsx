@@ -6,7 +6,10 @@ import { StepsStage } from "./stages/StepsStage"
 import { OverviewStage } from "./stages/OverviewStage"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowLeft, ArrowRight, Check } from "lucide-react"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { createRecipe } from "@/lib/api/recipes"
 
 const STAGES = [
   { id: 0, name: "General", component: MetadataStage },
@@ -15,10 +18,14 @@ const STAGES = [
 ]
 
 export function RecipeFormWrapper() {
-  const { currentStage, setCurrentStage, canGoToStage } = useRecipeFormStore()
+  const { currentStage, setCurrentStage, canGoToStage, getRecipeData } = useRecipeFormStore()
+  const [isSubmitting, setIsSubmitting] = useState(false)
   
   const CurrentStageComponent = STAGES[currentStage].component
   const progress = ((currentStage + 1) / STAGES.length) * 100
+  const isLastStage = currentStage === STAGES.length - 1
+  
+  const router = useRouter()
   
   const handleNext = () => {
     if (currentStage < STAGES.length - 1 && canGoToStage(currentStage + 1)) {
@@ -29,6 +36,22 @@ export function RecipeFormWrapper() {
   const handleBack = () => {
     if (currentStage > 0) {
       setCurrentStage(currentStage - 1)
+    }
+  }
+
+  const handleCreate = async () => {
+    setIsSubmitting(true)
+    try {
+      const recipeData = getRecipeData()
+      await createRecipe(recipeData)
+      router.push("/recipes")
+      // TOASTER, etc...
+      router.push("/recipes")
+    } catch (error) {
+      console.error("Error creating recipe:", error)
+      // ERROR MSG
+    } finally {
+      setIsSubmitting(false)
     }
   }
   
@@ -57,13 +80,24 @@ export function RecipeFormWrapper() {
           Back
         </Button>
         
-        <Button
-          onClick={handleNext}
-          disabled={currentStage === STAGES.length - 1}
-        >
-          Next
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
+        {isLastStage ? (
+          <Button
+            onClick={handleCreate}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Creating..." : "Create Recipe"}
+            <Check className="ml-2 h-4 w-4" />
+          </Button>
+        ) : (
+          <Button
+            onClick={handleNext}
+            disabled={!canGoToStage(currentStage + 1)}
+          >
+            Next
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        )}
+
       </div>
     </div>
   )
