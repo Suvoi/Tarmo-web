@@ -7,7 +7,7 @@ export function OverviewStage() {
     const formData = useRecipeFormStore((state) => state.formData)
     
     return (
-        <div className="h-full lg:w-7/8 lg:h-4/5 grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <div className="h-full w-full p-2 grid grid-cols-1 md:grid-cols-2 gap-2 border">
             <div className="space-y-3 p-2">
                 <h2 className="text-4xl mb-6">{formData.name}</h2>
                 <div className="flex space-x-2">
