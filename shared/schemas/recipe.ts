@@ -4,7 +4,7 @@ import { stepSchema } from './step'
 export const recipeSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
-  steps: z.array(stepSchema),
+  steps: z.array(stepSchema).min(1),
   quantity: z.number().min(1),
   unit: z.string(),
   difficulty: z.string(),

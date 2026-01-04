@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { Recipe } from '@/shared/schemas/recipe'
+import { Recipe, recipeSchema } from '@/shared/schemas/recipe'
 
 type RecipeFormStore = {
   currentStage: number
@@ -88,7 +88,22 @@ export const useRecipeFormStore = create<RecipeFormStore>((set, get) => ({
     if (targetStage < currentStage) return true
     if (targetStage === currentStage) return true
     
-    // TODO: implementar validación por stage
-    return true
+    try {
+      if (targetStage === 1) {
+        recipeSchema.pick({
+          name: true,
+          description: true,
+          img_url: true,
+          difficulty: true,
+          quantity: true,
+          unit: true,
+        }).parse(formData)
+      } else if (targetStage === 2) {
+        recipeSchema.pick({ steps: true }).parse(formData)
+      }
+      return true
+    } catch (e) {
+      return false
+    }
   },
 }))
