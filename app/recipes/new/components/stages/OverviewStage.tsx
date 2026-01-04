@@ -28,7 +28,6 @@ export function OverviewStage() {
                 {formData.steps?.map((step, index) => (
                     <Item
                       key={index}
-                      variant='outline'
                       size="default"
                       className="h-auto"
                     >

@@ -23,7 +23,7 @@ import Link from "next/link"
 const fetcher = () => getRecipes()
 
 export default function RecipesView({ initial }: {initial: Recipe[] }) {
-  const { data, mutate } = useSWR("/items", fetcher, {
+  const { data } = useSWR("/items", fetcher, {
     fallbackData: initial,
     refreshInterval: 1000,
   })
@@ -80,7 +80,7 @@ export default function RecipesView({ initial }: {initial: Recipe[] }) {
             <Item key={recipe.name} variant="muted">
               <ItemHeader>
                 <Image
-                  src={recipe.img_url}
+                  src={recipe.img_url ?? "https://placehold.co/100"}
                   alt={recipe.name}
                   width={128}
                   height={128}

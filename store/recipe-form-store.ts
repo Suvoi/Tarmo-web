@@ -102,7 +102,7 @@ export const useRecipeFormStore = create<RecipeFormStore>((set, get) => ({
         recipeSchema.pick({ steps: true }).parse(formData)
       }
       return true
-    } catch (e) {
+    } catch {
       return false
     }
   },

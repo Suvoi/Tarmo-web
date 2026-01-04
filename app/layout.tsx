@@ -1,4 +1,3 @@
-import { AnimatePresence } from "framer-motion";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, DM_Sans } from "next/font/google";
 import "./globals.css";

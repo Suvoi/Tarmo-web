@@ -1,6 +1,6 @@
 import { Recipe, recipeSchema } from "@/shared/schemas/recipe"
 
-const API_URL = "http://localhost:9136/"
+const API_URL = "http://localhost:9136"
 
 const mode = process.env.NEXT_PUBLIC_API_MODE ?? "real"
 

@@ -61,7 +61,7 @@ export function StepsStage() {
                       e.stopPropagation()
                       moveStepDown(index)
                     }}
-                    disabled={index === formData.steps.length - 1}
+                    disabled={index === formData.steps!.length - 1}
                   ><ChevronDown /></Button>
                 </ButtonGroup>
               </ItemActions>
