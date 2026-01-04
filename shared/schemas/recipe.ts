@@ -5,10 +5,10 @@ export const recipeSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
   steps: z.array(stepSchema),
-  quantity: z.number().min(0),
+  quantity: z.number().min(1),
   unit: z.string(),
   difficulty: z.string(),
-  img_url: z.string().url(),
+  img_url: z.string().url().optional(),
 })
 
 export const recipeWithIdSchema = recipeSchema.extend({
