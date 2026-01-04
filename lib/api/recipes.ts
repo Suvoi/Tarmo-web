@@ -1,4 +1,4 @@
-import { Recipe, recipeWithIdSchema } from "@/shared/schemas/recipe"
+import { Recipe, RecipeWithId, recipeWithIdSchema } from "@/shared/schemas/recipe"
 
 const API_URL = "http://localhost:9136"
 
@@ -17,17 +17,32 @@ function generateMockRecipes(count = 0): Recipe[] {
   }))
 }
 
-export async function getRecipes(): Promise<Recipe[]> {
+export async function getRecipes(): Promise<RecipeWithId[]> {
   if (mode === "mock") {
     return recipeWithIdSchema.array().parse(generateMockRecipes())
   }
-
   try {
-    const res = await fetch(`${API_URL}/recipes/`, { cache: "no-store" })
+    const res = await fetch(`${API_URL}/recipes/`, { 
+      cache: "no-store",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    
+    console.log('Response status:', res.status)
+    console.log('Response ok:', res.ok)
+    
     if (!res.ok) throw new Error("Could not connect to the API")
+    
     const data = await res.json()
-    return recipeWithIdSchema.array().parse(data)
-  } catch {
+    console.log('Raw data from API:', data)
+    
+    const parsed = recipeWithIdSchema.array().parse(data)
+    console.log('Parsed data:', parsed)
+    
+    return parsed
+  } catch (error) {
+    console.error('Error in getRecipes:', error)
     return recipeWithIdSchema.array().parse([])
   }
 }

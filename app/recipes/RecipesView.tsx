@@ -2,7 +2,7 @@
 
 import useSWR from "swr"
 import { getRecipes } from "@/lib/api/recipes"
-import { Recipe } from "@/shared/schemas/recipe"
+import { Recipe, RecipeWithId } from "@/shared/schemas/recipe"
 import { motion } from "framer-motion"
 
 import Image from "next/image"
@@ -22,10 +22,10 @@ import Link from "next/link"
 
 const fetcher = () => getRecipes()
 
-export default function RecipesView({ initial }: {initial: Recipe[] }) {
-  const { data } = useSWR("/items", fetcher, {
+export default function RecipesView({ initial }: {initial: RecipeWithId[] }) {
+  const { data } = useSWR("/recipes", fetcher, {
     fallbackData: initial,
-    refreshInterval: 1000,
+    refreshInterval: 5000,
   })
 
   // Animation stuff
@@ -69,15 +69,15 @@ export default function RecipesView({ initial }: {initial: Recipe[] }) {
           </Empty>
         </div>
       ) : (
-        <ItemGroup className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+        <ItemGroup className="grid gap-4 grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-6">
         {data.map((recipe) => (
           <motion.div
-            key={recipe.name}
+            key={recipe.id}
             variants={itemVariants}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
           >
-            <Item key={recipe.name} variant="muted">
+            <Item key={recipe.id} variant="muted">
               <ItemHeader>
                 <Image
                   src={recipe.img_url ?? "https://placehold.co/100"}
@@ -85,6 +85,7 @@ export default function RecipesView({ initial }: {initial: Recipe[] }) {
                   width={128}
                   height={128}
                   className="aspect-square w-full rounded-sm object-cover"
+                  unoptimized
                 />
               </ItemHeader>
               <ItemContent>
