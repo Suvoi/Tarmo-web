@@ -4,12 +4,14 @@ const API_URL = "http://localhost:9136"
 
 const mode = process.env.NEXT_PUBLIC_API_MODE ?? "real"
 
-function generateMockRecipes(count = 0): Recipe[] {
+function generateMockRecipes(count = 7): RecipeWithId[] {
   return Array.from({ length: count }, (_, i) => ({
     id: i + 1,
     name: `Recipe ${i + 1}`,
     description: "Generic recipe description",
-    steps: [],
+    steps: [
+      { name: "Step", instructions: "do whatever bro"}
+    ],
     quantity: 1,
     unit: "unit",
     difficulty: "easy",
@@ -44,6 +46,44 @@ export async function getRecipes(): Promise<RecipeWithId[]> {
   } catch (error) {
     console.error('Error in getRecipes:', error)
     return recipeWithIdSchema.array().parse([])
+  }
+}
+
+export async function getRecipe(id: string): Promise<RecipeWithId | null> {
+  if (mode === "mock") {
+    const mockRecipes = generateMockRecipes()
+    const recipe = mockRecipes.find(r => r.id === parseInt(id))
+    return recipe ? recipeWithIdSchema.parse(recipe) : null
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/recipes/${id}/`, { 
+      cache: "no-store",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    
+    console.log('Response status:', res.status)
+    
+    if (res.status === 404) {
+      return null
+    }
+    
+    if (!res.ok) {
+      throw new Error("Could not connect to the API")
+    }
+    
+    const data = await res.json()
+    console.log('Raw recipe data from API:', data)
+    
+    const parsed = recipeWithIdSchema.parse(data)
+    console.log('Parsed recipe:', parsed)
+    
+    return parsed
+  } catch (error) {
+    console.error('Error in getRecipe:', error)
+    return null
   }
 }
 

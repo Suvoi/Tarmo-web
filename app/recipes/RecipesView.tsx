@@ -1,18 +1,16 @@
 "use client"
-
 import useSWR from "swr"
 import { getRecipes } from "@/lib/api/recipes"
 import { Recipe, RecipeWithId } from "@/shared/schemas/recipe"
 import { motion } from "framer-motion"
-
 import Image from "next/image"
-
 import {
   Item,
   ItemContent,
   ItemDescription,
   ItemGroup,
   ItemHeader,
+  ItemMedia,
   ItemTitle,
 } from "@/components/ui/item"
 import { Inbox } from "lucide-react"
@@ -28,7 +26,6 @@ export default function RecipesView({ initial }: {initial: RecipeWithId[] }) {
     refreshInterval: 5000,
   })
 
-  // Animation stuff
   const containerVariants = {
     hidden: {},
     show: {
@@ -37,19 +34,15 @@ export default function RecipesView({ initial }: {initial: RecipeWithId[] }) {
       },
     },
   }
+
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { duration: 0.3 } },
   }
 
   return (
-    <motion.div
-     className="h-full w-full flex-col p-4 pt-2"
-     variants={containerVariants}
-      initial="hidden"
-      animate="show"
-    >
-      { data.length==0 ? (
+    <div className="h-full w-full flex flex-col p-4 pt-2 overflow-hidden">
+      {data.length === 0 ? (
         <div className="flex items-center justify-center h-full">
           <Empty>
             <EmptyHeader>
@@ -69,36 +62,45 @@ export default function RecipesView({ initial }: {initial: RecipeWithId[] }) {
           </Empty>
         </div>
       ) : (
-        <ItemGroup className="grid gap-4 grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-6">
-        {data.map((recipe) => (
-          <motion.div
-            key={recipe.id}
-            variants={itemVariants}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            <Item key={recipe.id} variant="muted">
-              <ItemHeader>
-                <Image
-                  src={recipe.img_url ?? "https://placehold.co/100"}
-                  alt={recipe.name}
-                  width={128}
-                  height={128}
-                  className="aspect-square w-full rounded-sm object-cover"
-                  unoptimized
-                />
-              </ItemHeader>
-              <ItemContent>
-                <ItemTitle>{recipe.name}</ItemTitle>
-                <ItemDescription>{recipe.description}</ItemDescription>
-              </ItemContent>
-            </Item>
-          </motion.div>
-        ))}
-      </ItemGroup>
-      )
-
-      }
-    </motion.div>
+        <motion.div
+          className="overflow-y-auto overflow-x-hidden"
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
+          <ItemGroup className="grid gap-4 grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 auto-rows-min p-1">
+            {data.map((recipe) => (
+              <motion.div
+                key={recipe.id}
+                variants={itemVariants}
+                whileHover={{ scale: 1.03, zIndex: 10 }}
+                whileTap={{ scale: 0.97 }}
+                className="relative"
+                style={{ transformOrigin: "center center" }}
+              >
+                <Link href={`/recipes/${recipe.id}`}>
+                  <Item variant="outline">
+                    <ItemMedia variant="image">
+                      <Image
+                        src={recipe.img_url ?? "https://placehold.co/100"}
+                        alt={recipe.name}
+                        width={128}
+                        height={128}
+                        className="aspect-square w-full rounded-sm object-cover"
+                        unoptimized
+                      />
+                    </ItemMedia>
+                    <ItemContent>
+                      <ItemTitle>{recipe.name}</ItemTitle>
+                      <ItemDescription>{recipe.description ?? "No description"}</ItemDescription>
+                    </ItemContent>
+                  </Item>
+                </Link>
+              </motion.div>
+            ))}
+          </ItemGroup>
+        </motion.div>
+      )}
+    </div>
   )
 }
