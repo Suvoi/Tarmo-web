@@ -10,6 +10,7 @@ import { ArrowLeft, ArrowRight, Check } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { createRecipe } from "@/lib/api/recipes"
+import { toast } from "sonner"
 
 const STAGES = [
   { id: 0, name: "General", component: MetadataStage },
@@ -18,7 +19,7 @@ const STAGES = [
 ]
 
 export function RecipeFormWrapper() {
-  const { currentStage, setCurrentStage, canGoToStage, getRecipeData } = useRecipeFormStore()
+  const { currentStage, setCurrentStage, canGoToStage, resetForm, getRecipeData } = useRecipeFormStore()
   const [isSubmitting, setIsSubmitting] = useState(false)
   
   const CurrentStageComponent = STAGES[currentStage].component
@@ -45,11 +46,11 @@ export function RecipeFormWrapper() {
       const recipeData = getRecipeData()
       await createRecipe(recipeData)
       router.push("/recipes")
-      // TOASTER, etc...
-      router.push("/recipes")
+      resetForm()
+      toast.success("Recipe added to your collection!")
     } catch (error) {
       console.error("Error creating recipe:", error)
-      // ERROR MSG
+      toast.error("Oops! Something went wrong.")
     } finally {
       setIsSubmitting(false)
     }
