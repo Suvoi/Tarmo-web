@@ -13,8 +13,8 @@ function generateMockRecipes(count = 7): RecipeWithId[] {
       { name: "Step", instructions: "do whatever bro"}
     ],
     quantity: 1,
-    unit: "unit",
-    difficulty: "easy",
+    unit: "Pieces",
+    difficulty: "Easy",
     img_url: `https://picsum.photos/seed/recipe-${i + 1}/400/300`,
   }))
 }
@@ -108,5 +108,31 @@ export async function createRecipe(recipe: Recipe) {
 
   } catch (error) {
     throw new Error("Failed to create recipe")
+  }
+}
+
+export async function deleteRecipe(id: string) {
+  try {
+    const res = await fetch(`${API_URL}/recipes/${id}/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    })
+
+    if (res.status === 404) {
+      throw new Error("Recipe not found")
+    }
+
+    if (!res.ok) {
+      throw new Error("Failed to delete recipe")
+    }
+
+    console.log(`Recipe ${id} deleted successfully`)
+
+  } catch (error) {
+    console.error("Error in deleteRecipe:", error)
+    throw error
   }
 }

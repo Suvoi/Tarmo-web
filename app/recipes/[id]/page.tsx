@@ -3,6 +3,10 @@ import { RecipeDetailView } from "@/components/recipes/RecipeDetailView"
 import { notFound } from "next/navigation"
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { ArrowLeft, Trash } from "lucide-react"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 
 export default async function RecipePage({
   params,
@@ -18,7 +22,7 @@ export default async function RecipePage({
   }
 
   return (
-    <>
+    <div className="h-full w-full flex flex-col justify-between">
       <header className="bg-background flex sticky top-0 z-30 h-16 shrink-0 items-center gap-2 px-4 w-full">
         <SidebarTrigger className="-ml-1" />
         <Breadcrumb>
@@ -42,9 +46,36 @@ export default async function RecipePage({
         </Breadcrumb>
       </header>
 
-      <div className="h-full w-full px-4">
+      <div className="w-full px-4 flex-1">
         <RecipeDetailView recipe={recipe} />
       </div>
-    </>
+
+      <footer className="p-4 flex justify-between">
+        <Button asChild variant="secondary">
+          <Link href="/recipes/"><ArrowLeft />Back</Link>
+        </Button>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive"><Trash/>Delete</Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete this recipe?</AlertDialogTitle>
+              <AlertDialogDescription>
+                You’re about to delete this recipe.
+                <br />
+                This action is permanent and can’t be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction variant="destructive">Delete recipe</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+      </footer>
+    </div>
   )
 }
