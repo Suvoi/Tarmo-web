@@ -49,7 +49,7 @@ export default function RecipesView({ initial }: {initial: RecipeWithId[] }) {
               <EmptyMedia variant="icon">
                 <Inbox />
               </EmptyMedia>
-              <EmptyTitle className="text-xl">Looks a bit empty…</EmptyTitle>
+              <EmptyTitle className="text-lg">Looks a bit empty…</EmptyTitle>
               <EmptyDescription className="text-lg">
                 Add a recipe to start building your collection.
               </EmptyDescription>
