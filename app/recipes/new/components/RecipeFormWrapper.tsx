@@ -11,6 +11,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { createRecipe } from "@/lib/api/recipes"
 import { toast } from "sonner"
+import { mutate } from "swr"
 
 const STAGES = [
   { id: 0, name: "General", component: MetadataStage },
@@ -46,6 +47,7 @@ export function RecipeFormWrapper() {
       const recipeData = getRecipeData()
       await createRecipe(recipeData)
       router.push("/recipes")
+      mutate("/recipes")
       resetForm()
       toast.success("Recipe added to your collection!")
     } catch (error) {

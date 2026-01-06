@@ -6,7 +6,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowLeft, Trash } from "lucide-react"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import DeleteRecipeButton from "@/components/recipes/DeleteRecipeButton"
 
 export default async function RecipePage({
   params,
@@ -55,26 +55,7 @@ export default async function RecipePage({
           <Link href="/recipes/"><ArrowLeft />Back</Link>
         </Button>
 
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="destructive"><Trash/>Delete</Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete this recipe?</AlertDialogTitle>
-              <AlertDialogDescription>
-                You’re about to delete this recipe.
-                <br />
-                This action is permanent and can’t be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction variant="destructive">Delete recipe</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
+        <DeleteRecipeButton id={id}/>
       </footer>
     </div>
   )
