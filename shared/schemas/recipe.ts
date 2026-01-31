@@ -7,7 +7,7 @@ export const recipeSchema = z.object({
   steps: z.array(stepSchema).min(1),
   quantity: z.number().min(1),
   unit: z.string(),
-  difficulty: z.number().min(1).max(5),
+  difficulty: z.number().min(0).max(5).default(0),
   img_url: z.string().url().optional().nullable(),
 })
 

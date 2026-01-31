@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Field, FieldLabel } from "@/components/ui/field"
+import { CircleQuestionMark, Croissant, Flame, Scale, Skull, Zap } from "lucide-react"
 
 export function MetadataStage() {
   const { formData, updateFormData } = useRecipeFormStore()
@@ -18,26 +19,6 @@ export function MetadataStage() {
           value={formData.name || ""}
           onChange={(e) => updateFormData({ name: e.target.value })}
         />
-      </Field>
-      
-      {/* Difficulty */}
-      <Field>
-        <FieldLabel>Difficulty *</FieldLabel>
-        <Select 
-          value={formData.difficulty?.toString() || ""}
-          onValueChange={(value) => updateFormData({ difficulty: parseInt(value) })}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="e.g Medium" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="1">Easy</SelectItem>
-              <SelectItem value="2">Medium</SelectItem>
-              <SelectItem value="3">Hard</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
       </Field>
       
       <div className="grid grid-cols-2 gap-4">
@@ -81,6 +62,29 @@ export function MetadataStage() {
           </Select>
         </Field>
       </div>
+      
+      {/* Difficulty */}
+      <Field>
+        <FieldLabel>Difficulty</FieldLabel>
+        <Select 
+          value={formData.difficulty?.toString() || "0"}
+          onValueChange={(value) => updateFormData({ difficulty: parseInt(value) })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Not specified" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="0"><CircleQuestionMark/>Not specified</SelectItem>
+              <SelectItem value="1"><Croissant size={16}/>Very Easy</SelectItem>
+              <SelectItem value="2"><Zap size={16}/>Easy</SelectItem>
+              <SelectItem value="3"><Scale size={16}/>Medium</SelectItem>
+              <SelectItem value="4"><Flame size={16}/>Hard</SelectItem>
+              <SelectItem value="5"><Skull size={16}/>Very Hard</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </Field>
       
       {/* Description */}
       <Field>

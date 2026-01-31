@@ -23,14 +23,14 @@ export function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
       case 5:
         return <Skull size={16} />
       default:
-        return <ChartNoAxesColumn size={16} />
+        return <CircleQuestionMark size={16} />
     }
   }
 
   const getDifficulty = (difficulty?: number) => {
     switch (difficulty) {
       case 0:
-        return "Unknown"
+        return "Not Specified"
       case 1:
         return "Very Easy"
       case 2:
@@ -54,7 +54,7 @@ export function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
               {recipe.quantity} {recipe.unit}
             </Badge>
           )}
-          {recipe.difficulty && (
+          {recipe.difficulty !== undefined && recipe.difficulty !== null && (
             <Badge className="text-base flex items-center gap-1">
               {getDifficultyIcon(recipe.difficulty)}
               {getDifficulty(recipe.difficulty)}
