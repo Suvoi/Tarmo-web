@@ -24,17 +24,17 @@ export function MetadataStage() {
       <Field>
         <FieldLabel>Difficulty *</FieldLabel>
         <Select 
-          value={formData.difficulty || ""}
-          onValueChange={(value) => updateFormData({ difficulty: value })}
+          value={formData.difficulty?.toString() || ""}
+          onValueChange={(value) => updateFormData({ difficulty: parseInt(value) })}
         >
           <SelectTrigger>
             <SelectValue placeholder="e.g Medium" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="Easy">Easy</SelectItem>
-              <SelectItem value="Medium">Medium</SelectItem>
-              <SelectItem value="Hard">Hard</SelectItem>
+              <SelectItem value="1">Easy</SelectItem>
+              <SelectItem value="2">Medium</SelectItem>
+              <SelectItem value="3">Hard</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

@@ -8,13 +8,13 @@ interface RecipeDetailViewProps {
 }
 
 export function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
-  const getDifficultyIcon = (difficulty?: string) => {
+  const getDifficultyIcon = (difficulty?: number) => {
     switch (difficulty) {
-      case "Easy":
+      case 1:
         return <Zap size={16} />
-      case "Medium":
+      case 2:
         return <Coffee size={16} />
-      case "Hard":
+      case 3:
         return <Flame size={16} />
       default:
         return <ChartNoAxesColumn size={16} />
