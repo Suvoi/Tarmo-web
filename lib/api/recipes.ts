@@ -1,138 +1,151 @@
-import { Recipe, RecipeWithId, recipeWithIdSchema } from "@/shared/schemas/recipe"
+import { Recipe, RecipeListItem, recipeListItemSchema, RecipeWithId, recipeWithIdSchema } from "@/shared/schemas/recipe"
+import { logger } from "../logger"
 
 const API_URL = "http://localhost:9136"
-
 const mode = process.env.NEXT_PUBLIC_API_MODE ?? "real"
 
 function generateMockRecipes(count = 7): RecipeWithId[] {
-  return Array.from({ length: count }, (_, i) => ({
+  logger.debug("generateMockRecipes", { count })
+
+  const recipes = Array.from({ length: count }, (_, i) => ({
     id: i + 1,
     name: `Recipe ${i + 1}`,
     description: "Generic recipe description",
-    steps: [
-      { name: "Step", instructions: "do whatever bro"}
-    ],
+    steps: [{ name: "Step", instructions: "do whatever bro" }],
     quantity: 1,
     unit: "Pieces",
     difficulty: "Easy",
     img_url: `https://picsum.photos/seed/recipe-${i + 1}/400/300`,
   }))
+
+  logger.debug("generateMockRecipes: generated recipes", recipes)
+  return recipes
 }
 
-export async function getRecipes(): Promise<RecipeWithId[]> {
+export async function getRecipes(): Promise<RecipeListItem[]> {
+  logger.info("getRecipes: start", { mode })
   if (mode === "mock") {
-    return recipeWithIdSchema.array().parse(generateMockRecipes())
+    const mock = generateMockRecipes()
+    logger.debug("getRecipes: mock data", mock)
+    return recipeListItemSchema.array().parse(mock)
   }
   try {
-    const res = await fetch(`${API_URL}/recipes/`, { 
+    const res = await fetch(`${API_URL}/recipes`, {
       cache: "no-store",
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { "Content-Type": "application/json" },
     })
-    
-    console.log('Response status:', res.status)
-    console.log('Response ok:', res.ok)
-    
-    if (!res.ok) throw new Error("Could not connect to the API")
-    
+    logger.debug("getRecipes: response", { status: res.status, ok: res.ok })
+    if (!res.ok) {
+      logger.warn("getRecipes: non-ok response", { status: res.status })
+      throw new Error("Could not connect to the API")
+    }
     const data = await res.json()
-    console.log('Raw data from API:', data)
-    
-    const parsed = recipeWithIdSchema.array().parse(data)
-    console.log('Parsed data:', parsed)
-    
+    logger.debug("getRecipes: raw data", data)
+    const parsed = recipeListItemSchema.array().parse(data)
+    logger.debug("getRecipes: parsed recipes", parsed)
     return parsed
   } catch (error) {
-    console.error('Error in getRecipes:', error)
-    return recipeWithIdSchema.array().parse([])
+    logger.error("getRecipes: failed", error)
+    throw error
   }
 }
 
 export async function getRecipe(id: string): Promise<RecipeWithId | null> {
+  logger.info("getRecipe: start", { id, mode })
+
   if (mode === "mock") {
     const mockRecipes = generateMockRecipes()
-    const recipe = mockRecipes.find(r => r.id === parseInt(id))
+    const recipe = mockRecipes.find(r => r.id === Number(id))
+    logger.debug("getRecipe: mock data", recipe)
     return recipe ? recipeWithIdSchema.parse(recipe) : null
   }
 
   try {
-    const res = await fetch(`${API_URL}/recipes/${id}/`, { 
+    const res = await fetch(`${API_URL}/recipes/${id}`, {
       cache: "no-store",
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { "Content-Type": "application/json" },
     })
-    
-    console.log('Response status:', res.status)
-    
+
+    logger.debug("getRecipe: response", { status: res.status })
+
     if (res.status === 404) {
+      logger.warn("getRecipe: recipe not found", { id })
       return null
     }
-    
+
     if (!res.ok) {
+      logger.error("getRecipe: API error", { status: res.status })
       throw new Error("Could not connect to the API")
     }
-    
+
     const data = await res.json()
-    console.log('Raw recipe data from API:', data)
-    
+    logger.debug("getRecipe: raw recipe data", data)
+
     const parsed = recipeWithIdSchema.parse(data)
-    console.log('Parsed recipe:', parsed)
-    
+    logger.debug("getRecipe: parsed recipe", parsed)
+
     return parsed
   } catch (error) {
-    console.error('Error in getRecipe:', error)
+    logger.error("getRecipe: failed", { id, error })
     return null
   }
 }
 
 export async function createRecipe(recipe: Recipe) {
+  logger.info("createRecipe: start", { mode })
+  logger.debug("createRecipe: recipe object", recipe)
+
   if (mode === "mock") {
-    console.log(`MOCK MODE, DEBUG: ${recipe}`)
+    return
   }
 
   try {
-    const res = await fetch(`${API_URL}/recipes/`, {
+    const res = await fetch(`${API_URL}/recipes`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(recipe),
       cache: "no-store",
     })
 
+    logger.debug("createRecipe: response", { status: res.status })
+
     if (!res.ok) {
+      logger.warn("createRecipe: failed response", { status: res.status, recipe })
       throw new Error("Could not create recipe")
     }
 
+    logger.info("createRecipe: success", { recipe })
   } catch (error) {
-    throw new Error("Failed to create recipe")
+    logger.error("createRecipe: failed", { recipe, error })
+    throw error
   }
 }
 
 export async function deleteRecipe(id: string) {
+  logger.info("deleteRecipe: start", { id })
+
   try {
-    const res = await fetch(`${API_URL}/recipes/${id}/`, {
+    const res = await fetch(`${API_URL}/recipes/${id}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       cache: "no-store",
     })
 
+    logger.debug("deleteRecipe: response", { status: res.status })
+
     if (res.status === 404) {
+      logger.warn("deleteRecipe: recipe not found", { id })
       throw new Error("Recipe not found")
     }
 
     if (!res.ok) {
+      logger.warn("deleteRecipe: failed response", { status: res.status, id })
       throw new Error("Failed to delete recipe")
     }
 
-    console.log(`Recipe ${id} deleted successfully`)
-
+    logger.info("deleteRecipe: success", { id })
   } catch (error) {
-    console.error("Error in deleteRecipe:", error)
+    logger.error("deleteRecipe: failed", { id, error })
     throw error
   }
 }
