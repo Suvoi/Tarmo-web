@@ -67,15 +67,15 @@ export function MetadataStage() {
       <Field>
         <FieldLabel>Difficulty</FieldLabel>
         <Select 
-          value={formData.difficulty?.toString() || "0"}
+          value={formData.difficulty?.toString() || ""}
           onValueChange={(value) => updateFormData({ difficulty: parseInt(value) })}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Not specified" />
+            <SelectValue placeholder="e.g Easy" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="0"><CircleQuestionMark/>Not specified</SelectItem>
+              <SelectItem value="0"><CircleQuestionMark size={16}/>Not specified</SelectItem>
               <SelectItem value="1"><Croissant size={16}/>Very Easy</SelectItem>
               <SelectItem value="2"><Zap size={16}/>Easy</SelectItem>
               <SelectItem value="3"><Scale size={16}/>Medium</SelectItem>
