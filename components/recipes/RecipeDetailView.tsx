@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge"
 import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item"
-import { Flame, Coffee, Zap, ChartNoAxesColumn } from "lucide-react"
+import { Flame, Coffee, Zap, ChartNoAxesColumn, CircleQuestionMark, Skull, Scale, Croissant } from "lucide-react"
 import { Recipe, RecipeWithId } from "@/shared/schemas/recipe"
 
 interface RecipeDetailViewProps {
@@ -10,14 +10,37 @@ interface RecipeDetailViewProps {
 export function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
   const getDifficultyIcon = (difficulty?: number) => {
     switch (difficulty) {
+      case 0:
+        return <CircleQuestionMark size={16}/>
       case 1:
-        return <Zap size={16} />
+        return <Croissant size={16}/>
       case 2:
-        return <Coffee size={16} />
+        return <Zap size={16} />
       case 3:
+        return <Scale size={16} />
+      case 4:
         return <Flame size={16} />
+      case 5:
+        return <Skull size={16} />
       default:
         return <ChartNoAxesColumn size={16} />
+    }
+  }
+
+  const getDifficulty = (difficulty?: number) => {
+    switch (difficulty) {
+      case 0:
+        return "Unknown"
+      case 1:
+        return "Very Easy"
+      case 2:
+        return "Easy"
+      case 3:
+        return "Medium"
+      case 4:
+        return "Hard"
+      case 5:
+        return "Very Hard"
     }
   }
 
@@ -34,7 +57,7 @@ export function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
           {recipe.difficulty && (
             <Badge className="text-base flex items-center gap-1">
               {getDifficultyIcon(recipe.difficulty)}
-              {recipe.difficulty}
+              {getDifficulty(recipe.difficulty)}
             </Badge>
           )}
         </div>
