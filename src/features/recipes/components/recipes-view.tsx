@@ -1,7 +1,6 @@
 "use client"
 import useSWR from "swr"
-import { getRecipes } from "@/lib/api/recipes"
-import { Recipe, RecipeWithId } from "@/shared/schemas/recipe"
+import { getRecipes, type RecipeListItem } from "@/features/recipes/api"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import {
@@ -9,18 +8,19 @@ import {
   ItemContent,
   ItemDescription,
   ItemGroup,
-  ItemHeader,
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item"
-import { Inbox } from "lucide-react"
+import { Inbox, PencilLine } from "lucide-react"
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu"
+import DeleteRecipeButton from "./delete-recipe-button"
 
 const fetcher = () => getRecipes()
 
-export default function RecipesView({ initial }: {initial: RecipeWithId[] }) {
+export default function RecipesView({ initial }: { initial: RecipeListItem[] }) {
   const { data } = useSWR("/recipes", fetcher, {
     fallbackData: initial,
     refreshInterval: 5000,
@@ -78,24 +78,36 @@ export default function RecipesView({ initial }: {initial: RecipeWithId[] }) {
                 className="relative"
                 style={{ transformOrigin: "center center" }}
               >
-                <Link href={`/recipes/${recipe.id}`}>
-                  <Item variant="outline">
-                    <ItemMedia variant="image">
-                      <Image
-                        src={recipe.img_url ?? "https://placehold.co/100"}
-                        alt={recipe.name}
-                        width={128}
-                        height={128}
-                        className="aspect-square w-full rounded-sm object-cover"
-                        unoptimized
-                      />
-                    </ItemMedia>
-                    <ItemContent>
-                      <ItemTitle>{recipe.name}</ItemTitle>
-                      <ItemDescription>{recipe.description ?? "No description"}</ItemDescription>
-                    </ItemContent>
-                  </Item>
-                </Link>
+                <ContextMenu>
+                  <ContextMenuTrigger>
+                    <Link href={`/recipes/${recipe.id}`}>
+                      <Item variant="outline">
+                        <ItemMedia variant="image">
+                          <Image
+                            src="https://placehold.co/100"
+                            alt={recipe.name ?? "Recipe image"}
+                            width={128}
+                            height={128}
+                            className="aspect-square w-full rounded-sm object-cover"
+                            unoptimized
+                          />
+                        </ItemMedia>
+                        <ItemContent>
+                          <ItemTitle>{recipe.name ?? "Untitled"}</ItemTitle>
+                          <ItemDescription>{recipe.description ?? "No description"}</ItemDescription>
+                        </ItemContent>
+                      </Item>
+                    </Link>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent>
+                    <ContextMenuItem asChild>
+                      <Link href={`/recipes/${recipe.id}/edit`}><PencilLine />Edit</Link>
+                    </ContextMenuItem>
+                    <ContextMenuItem asChild variant="destructive" onSelect={(e) => e.preventDefault()}>
+                      <DeleteRecipeButton id={recipe.id!} showButton={false} />
+                    </ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
               </motion.div>
             ))}
           </ItemGroup>

@@ -1,7 +1,7 @@
-import { getRecipes } from "@/lib/api/recipes"
+import { getRecipes } from "@/features/recipes/api"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-import RecipesView from "./RecipesView"
+import RecipesView from "@/features/recipes/components/recipes-view"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { BookDashed, Plus, Search } from "lucide-react"
@@ -37,14 +37,14 @@ export default async function Page() {
               <Plus />
             </Link>
           </Button>
-          <Button><BookDashed/></Button>
+          <Button aria-label="Recipe book"><BookDashed /></Button>
         </ButtonGroup>
         <InputGroup className="md:w-2/3 lg:w-1/3">
-        <InputGroupInput placeholder="Search..." />
-        <InputGroupAddon>
-          <Search />
-        </InputGroupAddon>
-      </InputGroup>
+          <InputGroupInput placeholder="Search..." />
+          <InputGroupAddon>
+            <Search />
+          </InputGroupAddon>
+        </InputGroup>
       </div>
 
       <div className="overflow-hidden flex-1">

@@ -1,9 +1,9 @@
 "use client"
-import { useRecipeFormStore } from "@/store/recipe-form-store"
+import { useRecipeFormStore } from "@/features/recipes/store/recipe-form-store"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp, Plus } from "lucide-react"
-import StepForm from "@/components/recipes/form/step-form"
+import StepForm from "@/features/recipes/components/step-form"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item"
@@ -14,7 +14,7 @@ export function StepsStage() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const isMobile = useIsMobile()
-  
+
   return (
     <div className="w-full h-full sm:max-w-4xl grid grid-cols-1 sm:grid-cols-2 gap-4">
 
@@ -29,7 +29,8 @@ export function StepsStage() {
               key={index}
               onClick={() => {
                 setEditingIndex(index)
-                if (isMobile) setIsSheetOpen(true)}
+                if (isMobile) setIsSheetOpen(true)
+              }
               }
               variant={(editingIndex === index) ? 'muted' : 'outline'}
               className="cursor-pointer"
@@ -45,7 +46,7 @@ export function StepsStage() {
               </ItemContent>
               <ItemActions>
                 <ButtonGroup>
-                  <Button 
+                  <Button
                     size="icon-sm"
                     variant="ghost"
                     onClick={(e) => {
@@ -54,7 +55,7 @@ export function StepsStage() {
                     }}
                     disabled={index === 0}
                   ><ChevronUp /></Button>
-                  <Button 
+                  <Button
                     size="icon-sm"
                     variant="ghost"
                     onClick={(e) => {
@@ -68,28 +69,28 @@ export function StepsStage() {
             </Item>
           ))}
         </div>
-        
+
         {/* ADD STEP BUTTON */}
         <Button variant="ghost" onClick={addStep}>
           <Plus />
           Add Step
         </Button>
       </div>
-      
+
       {/* RIGHT PANEL - FORM */}
       {/* LARGE SCREENS */}
       <div className="p-4 hidden sm:flex flex-col gap-4 overflow-y-auto justify-between">
         <h3 className="font-semibold">
           {editingIndex !== null ? `Edit Step ${editingIndex + 1}` : "New Step"}
         </h3>
-        
+
         {/* NEW STEP FORM */}
         {editingIndex !== null ? (
           <StepForm
             editingIndex={editingIndex}
             setEditingIndex={setEditingIndex}
             setIsSheetOpen={setIsSheetOpen}
-            />
+          />
         ) : (
           <div className="flex items-center justify-center h-full">
             <p className="text-muted-foreground text-center">
@@ -109,7 +110,7 @@ export function StepsStage() {
               </SheetTitle>
             </SheetHeader>
             {editingIndex !== null && (
-              <StepForm 
+              <StepForm
                 editingIndex={editingIndex}
                 setEditingIndex={setEditingIndex}
                 setIsSheetOpen={setIsSheetOpen}
@@ -118,7 +119,7 @@ export function StepsStage() {
           </SheetContent>
         </Sheet>
       </div>
-      
+
     </div>
   )
 }

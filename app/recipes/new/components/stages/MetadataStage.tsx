@@ -1,5 +1,5 @@
 "use client"
-import { useRecipeFormStore } from "@/store/recipe-form-store"
+import { useRecipeFormStore } from "@/features/recipes/store/recipe-form-store"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -8,31 +8,31 @@ import { CircleQuestionMark, Croissant, Flame, Scale, Skull, Zap } from "lucide-
 
 export function MetadataStage() {
   const { formData, updateFormData } = useRecipeFormStore()
-  
+
   return (
     <div className="max-w-4xl sm:1/2 xl:w-1/3 flex flex-col space-y-4">
       {/* Name */}
       <Field>
         <FieldLabel>Name *</FieldLabel>
-        <Input 
+        <Input
           placeholder="e.g Pepperoni Pizza"
           value={formData.name || ""}
           onChange={(e) => updateFormData({ name: e.target.value })}
         />
       </Field>
-      
+
       <div className="grid grid-cols-2 gap-4">
         {/* Quantity */}
         <Field>
           <FieldLabel>Quantity *</FieldLabel>
-          <Input 
-            type="number" 
+          <Input
+            type="number"
             placeholder="e.g 2"
             value={formData.quantity || ""}
             onChange={(e) => updateFormData({ quantity: parseFloat(e.target.value) || 0 })}
           />
         </Field>
-        
+
         {/* Unit */}
         <Field>
           <FieldLabel>Unit *</FieldLabel>
@@ -62,11 +62,11 @@ export function MetadataStage() {
           </Select>
         </Field>
       </div>
-      
+
       {/* Difficulty */}
       <Field>
         <FieldLabel>Difficulty</FieldLabel>
-        <Select 
+        <Select
           value={formData.difficulty?.toString() || ""}
           onValueChange={(value) => updateFormData({ difficulty: parseInt(value) })}
         >
@@ -75,22 +75,22 @@ export function MetadataStage() {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="0"><CircleQuestionMark size={16}/>Not specified</SelectItem>
-              <SelectItem value="1"><Croissant size={16}/>Very Easy</SelectItem>
-              <SelectItem value="2"><Zap size={16}/>Easy</SelectItem>
-              <SelectItem value="3"><Scale size={16}/>Medium</SelectItem>
-              <SelectItem value="4"><Flame size={16}/>Hard</SelectItem>
-              <SelectItem value="5"><Skull size={16}/>Very Hard</SelectItem>
+              <SelectItem value="0"><CircleQuestionMark size={16} />Not specified</SelectItem>
+              <SelectItem value="1"><Croissant size={16} />Very Easy</SelectItem>
+              <SelectItem value="2"><Zap size={16} />Easy</SelectItem>
+              <SelectItem value="3"><Scale size={16} />Medium</SelectItem>
+              <SelectItem value="4"><Flame size={16} />Hard</SelectItem>
+              <SelectItem value="5"><Skull size={16} />Very Hard</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
       </Field>
-      
+
       {/* Description */}
       <Field>
         <FieldLabel>Description</FieldLabel>
-        <Textarea 
-          className="max-h-40" 
+        <Textarea
+          className="max-h-40"
           placeholder="Delicious yummy pizza..."
           value={formData.description || ""}
           onChange={(e) => updateFormData({ description: e.target.value })}

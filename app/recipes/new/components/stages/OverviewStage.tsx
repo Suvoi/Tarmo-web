@@ -1,13 +1,12 @@
-import { RecipeDetailView } from "@/components/recipes/RecipeDetailView"
-import { recipeSchema } from "@/shared/schemas/recipe"
-import { useRecipeFormStore } from "@/store/recipe-form-store"
+import { RecipeDetailView } from "@/features/recipes/components/recipe-detail-view"
+import { useRecipeFormStore } from "@/features/recipes/store/recipe-form-store"
 
 export function OverviewStage() {
-    const formData = useRecipeFormStore((state) => state.formData)
+    const { getRecipeData } = useRecipeFormStore()
 
-    const validRecipe = recipeSchema.parse(formData)
-    
+    const validRecipe = getRecipeData()
+
     return (
-        <RecipeDetailView recipe={validRecipe}/>
+        <RecipeDetailView recipe={validRecipe} />
     )
 }

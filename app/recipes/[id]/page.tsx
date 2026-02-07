@@ -1,17 +1,18 @@
-import { getRecipe } from "@/lib/api/recipes"
-import { RecipeDetailView } from "@/components/recipes/RecipeDetailView"
+import { getRecipe } from "@/features/recipes/api"
+import { RecipeDetailView } from "@/features/recipes/components/recipe-detail-view"
 import { notFound } from "next/navigation"
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { ArrowLeft, Trash } from "lucide-react"
-import DeleteRecipeButton from "@/components/recipes/DeleteRecipeButton"
+import { ArrowLeft, PencilLine } from "lucide-react"
+import DeleteRecipeButton from "@/features/recipes/components/delete-recipe-button"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 export default async function RecipePage({
   params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: number }>
 }) {
   const { id } = await params
 
@@ -51,11 +52,25 @@ export default async function RecipePage({
       </div>
 
       <footer className="p-4 flex justify-between">
-        <Button asChild variant="secondary">
+        <Button asChild variant="ghost">
           <Link href="/recipes/"><ArrowLeft />Back</Link>
         </Button>
 
-        <DeleteRecipeButton id={id}/>
+
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button asChild variant="ghost">
+              <Link href={`/recipes/${id}/edit`}><PencilLine /></Link>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Edit</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <DeleteRecipeButton id={id} showButton={true} />
+
       </footer>
     </div>
   )

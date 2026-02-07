@@ -1,19 +1,20 @@
 import { Badge } from "@/components/ui/badge"
 import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item"
-import { Flame, Coffee, Zap, ChartNoAxesColumn, CircleQuestionMark, Skull, Scale, Croissant } from "lucide-react"
-import { Recipe, RecipeWithId } from "@/shared/schemas/recipe"
+import { Zap, CircleQuestionMark, Flame, Skull, Scale, Croissant } from "lucide-react"
+import DeleteRecipeButton from "./delete-recipe-button"
+import type { Recipe } from "@/features/recipes/api"
 
 interface RecipeDetailViewProps {
-  recipe: Recipe | RecipeWithId
+  recipe: Recipe
 }
 
 export function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
   const getDifficultyIcon = (difficulty?: number) => {
     switch (difficulty) {
       case 0:
-        return <CircleQuestionMark size={16}/>
+        return <CircleQuestionMark size={16} />
       case 1:
-        return <Croissant size={16}/>
+        return <Croissant size={16} />
       case 2:
         return <Zap size={16} />
       case 3:
@@ -66,7 +67,7 @@ export function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
         </p>
       </div>
       <div className="space-y-2 max-h-full lg:overflow-y-auto p-2">
-        {recipe.steps.map((step, index) => (
+        {recipe.steps?.map((step, index) => (
           <Item key={index} size="default" className="h-auto">
             <ItemContent>
               <ItemTitle className="text-xl">

@@ -3,7 +3,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Trash } from "lucide-react"
 import { Input } from "@/components/ui/input";
-import { useRecipeFormStore } from "@/store/recipe-form-store";
+import { useRecipeFormStore } from "../store/recipe-form-store";
 
 interface StepFormProps {
   editingIndex: number
@@ -13,25 +13,25 @@ interface StepFormProps {
 
 export default function StepForm({ editingIndex, setEditingIndex, setIsSheetOpen }: StepFormProps) {
   const { formData, updateStep, removeStep } = useRecipeFormStore()
-  
+
   const currentName = formData.steps?.[editingIndex]?.name || ""
   const currentInstructions = formData.steps?.[editingIndex]?.instructions || ""
-  
+
   return (
     <Field className="flex justify-between items-center h-full">
       <FieldGroup>
         <Field>
           <FieldLabel>Step Name *</FieldLabel>
-          <Input 
+          <Input
             placeholder="e.g. Preheat oven"
             value={currentName}
             onChange={(e) => updateStep(editingIndex, 'name', e.target.value)}
           />
         </Field>
-        
+
         <Field>
           <FieldLabel>Instructions</FieldLabel>
-          <Textarea 
+          <Textarea
             placeholder="Detailed instructions..."
             value={currentInstructions || ""}
             onChange={(e) => updateStep(editingIndex, 'instructions', e.target.value)}
