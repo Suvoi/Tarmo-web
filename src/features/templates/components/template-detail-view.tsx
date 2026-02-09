@@ -1,14 +1,14 @@
 import { Badge } from "@/components/ui/badge"
 import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item"
 import { Zap, CircleQuestionMark, Flame, Skull, Scale, Croissant } from "lucide-react"
-import DeleteRecipeButton from "./delete-recipe-button"
-import type { Recipe } from "@/features/recipes/api"
+import DeleteTemplateButton from "./delete-template-button"
+import type { Template } from "@/features/templates/api"
 
-interface RecipeDetailViewProps {
-  recipe: Recipe
+interface TemplateDetailViewProps {
+  template: Template
 }
 
-export function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
+export function TemplateDetailView({ template }: TemplateDetailViewProps) {
   const getDifficultyIcon = (difficulty?: number) => {
     switch (difficulty) {
       case 0:
@@ -48,26 +48,26 @@ export function RecipeDetailView({ recipe }: RecipeDetailViewProps) {
   return (
     <div className="h-full w-full p-2 grid grid-cols-1 md:grid-cols-2 gap-2">
       <div className="space-y-3 p-2">
-        <h2 className="text-4xl mb-6">{recipe.name}</h2>
+        <h2 className="text-4xl mb-6">{template.name}</h2>
         <div className="flex space-x-2">
-          {recipe.quantity && recipe.unit && (
+          {template.quantity && template.unit && (
             <Badge className="text-base">
-              {recipe.quantity} {recipe.unit}
+              {template.quantity} {template.unit}
             </Badge>
           )}
-          {recipe.difficulty !== undefined && recipe.difficulty !== null && (
+          {template.difficulty !== undefined && template.difficulty !== null && (
             <Badge className="text-base flex items-center gap-1">
-              {getDifficultyIcon(recipe.difficulty)}
-              {getDifficulty(recipe.difficulty)}
+              {getDifficultyIcon(template.difficulty)}
+              {getDifficulty(template.difficulty)}
             </Badge>
           )}
         </div>
         <p className="text-base leading-relaxed">
-          {recipe.description || "No description available"}
+          {template.description || "No description available"}
         </p>
       </div>
       <div className="space-y-2 max-h-full lg:overflow-y-auto p-2">
-        {recipe.steps?.map((step, index) => (
+        {template.steps?.map((step, index) => (
           <Item key={index} size="default" className="h-auto">
             <ItemContent>
               <ItemTitle className="text-xl">

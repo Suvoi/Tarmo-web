@@ -12,7 +12,7 @@ import {
 import { Lexend } from 'next/font/google'
 import Link from "next/link"
 import Image from 'next/image'
-import { NotebookText } from "lucide-react"
+import { Form } from "lucide-react"
 
 const lexend = Lexend({
   subsets: ['latin'],
@@ -22,9 +22,9 @@ const lexend = Lexend({
 const data = {
   navMain: [
     {
-      title: 'Recipes',
-      url: '/recipes',
-      icon: NotebookText,
+      title: 'Templates',
+      url: '/templates',
+      icon: Form,
     },
   ],
 }

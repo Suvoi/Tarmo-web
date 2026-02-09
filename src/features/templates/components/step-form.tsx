@@ -3,7 +3,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Trash } from "lucide-react"
 import { Input } from "@/components/ui/input";
-import { useRecipeFormStore } from "../store/recipe-form-store";
+import { useTemplateFormStore } from "../store/template-form-store";
 
 interface StepFormProps {
   editingIndex: number
@@ -12,7 +12,7 @@ interface StepFormProps {
 }
 
 export default function StepForm({ editingIndex, setEditingIndex, setIsSheetOpen }: StepFormProps) {
-  const { formData, updateStep, removeStep } = useRecipeFormStore()
+  const { formData, updateStep, removeStep } = useTemplateFormStore()
 
   const currentName = formData.steps?.[editingIndex]?.name || ""
   const currentInstructions = formData.steps?.[editingIndex]?.instructions || ""

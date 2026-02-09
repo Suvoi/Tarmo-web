@@ -1,13 +1,13 @@
 import { z } from 'zod'
 
-export const RecipeStepSchema = z.object({
+export const TemplateStepSchema = z.object({
     name: z.string().min(1, "Step name is required").trim(),
     instructions: z.string().optional().nullable(),
 })
 
-export const RecipeStepsSchema = z.array(RecipeStepSchema).min(1, "At least one step is required")
+export const TemplateStepsSchema = z.array(TemplateStepSchema).min(1, "At least one step is required")
 
-export const RecipeOverviewSchema = z.object({
+export const TemplateOverviewSchema = z.object({
     name: z.string().min(1, "Name is required").trim(),
     description: z.string().optional().nullable(),
     quantity: z.number().min(1, "Quantity must be at least 1"),
@@ -16,5 +16,5 @@ export const RecipeOverviewSchema = z.object({
     img_url: z.string().url().optional().nullable(),
 })
 
-export type RecipeStep = z.infer<typeof RecipeStepSchema>
-export type RecipeOverview = z.infer<typeof RecipeOverviewSchema>
+export type TemplateStep = z.infer<typeof TemplateStepSchema>
+export type TemplateOverview = z.infer<typeof TemplateOverviewSchema>

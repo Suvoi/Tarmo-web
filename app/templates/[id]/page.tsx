@@ -1,24 +1,24 @@
-import { getRecipe } from "@/features/recipes/api"
-import { RecipeDetailView } from "@/features/recipes/components/recipe-detail-view"
+import { getTemplate } from "@/features/templates/api"
+import { TemplateDetailView } from "@/features/templates/components/template-detail-view"
 import { notFound } from "next/navigation"
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowLeft, PencilLine } from "lucide-react"
-import DeleteRecipeButton from "@/features/recipes/components/delete-recipe-button"
+import DeleteTemplateButton from "@/features/templates/components/delete-template-button"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
-export default async function RecipePage({
+export default async function TemplatePage({
   params,
 }: {
   params: Promise<{ id: number }>
 }) {
   const { id } = await params
 
-  const recipe = await getRecipe(id)
+  const template = await getTemplate(id)
 
-  if (!recipe) {
+  if (!template) {
     notFound()
   }
 
@@ -35,25 +35,25 @@ export default async function RecipePage({
             </BreadcrumbItem>
             <BreadcrumbSeparator className="hidden md:block" />
             <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="/recipes">
-                Recipes
+              <BreadcrumbLink href="/templates">
+                Templates
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator className="hidden md:block" />
             <BreadcrumbItem>
-              <BreadcrumbPage>{recipe.name}</BreadcrumbPage>
+              <BreadcrumbPage>{template.name}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </header>
 
       <div className="w-full px-4 flex-1">
-        <RecipeDetailView recipe={recipe} />
+        <TemplateDetailView template={template} />
       </div>
 
       <footer className="p-4 flex justify-between">
         <Button asChild variant="ghost">
-          <Link href="/recipes/"><ArrowLeft />Back</Link>
+          <Link href="/templates/"><ArrowLeft />Back</Link>
         </Button>
 
 
@@ -61,7 +61,7 @@ export default async function RecipePage({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button asChild variant="ghost">
-              <Link href={`/recipes/${id}/edit`}><PencilLine /></Link>
+              <Link href={`/templates/${id}/edit`}><PencilLine /></Link>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -69,7 +69,7 @@ export default async function RecipePage({
           </TooltipContent>
         </Tooltip>
 
-        <DeleteRecipeButton id={id} showButton={true} />
+        <DeleteTemplateButton id={id} showButton={true} />
 
       </footer>
     </div>

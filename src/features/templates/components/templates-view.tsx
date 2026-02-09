@@ -1,6 +1,6 @@
 "use client"
 import useSWR from "swr"
-import { getRecipes, type RecipeListItem } from "@/features/recipes/api"
+import { getTemplates, type TemplateListItem } from "@/features/templates/api"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import {
@@ -16,12 +16,12 @@ import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTi
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu"
-import DeleteRecipeButton from "./delete-recipe-button"
+import DeleteTemplateButton from "./delete-template-button"
 
-const fetcher = () => getRecipes()
+const fetcher = () => getTemplates()
 
-export default function RecipesView({ initial }: { initial: RecipeListItem[] }) {
-  const { data } = useSWR("/recipes", fetcher, {
+export default function TemplatesView({ initial }: { initial: TemplateListItem[] }) {
+  const { data } = useSWR("/templates", fetcher, {
     fallbackData: initial,
     refreshInterval: 5000,
   })
@@ -51,12 +51,12 @@ export default function RecipesView({ initial }: { initial: RecipeListItem[] }) 
               </EmptyMedia>
               <EmptyTitle className="text-lg">Looks a bit empty…</EmptyTitle>
               <EmptyDescription className="text-lg">
-                Add a recipe to start building your collection.
+                Add a template to start building your collection.
               </EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
               <Button asChild size="lg">
-                <Link href="/recipes/new">Add a recipe</Link>
+                <Link href="/templates/new">Add a template</Link>
               </Button>
             </EmptyContent>
           </Empty>
@@ -69,9 +69,9 @@ export default function RecipesView({ initial }: { initial: RecipeListItem[] }) 
           animate="show"
         >
           <ItemGroup className="grid gap-4 grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 auto-rows-min p-1">
-            {data.map((recipe) => (
+            {data.map((template) => (
               <motion.div
-                key={recipe.id}
+                key={template.id}
                 variants={itemVariants}
                 whileHover={{ scale: 1.03, zIndex: 10 }}
                 whileTap={{ scale: 0.97 }}
@@ -80,12 +80,12 @@ export default function RecipesView({ initial }: { initial: RecipeListItem[] }) 
               >
                 <ContextMenu>
                   <ContextMenuTrigger>
-                    <Link href={`/recipes/${recipe.id}`}>
+                    <Link href={`/templates/${template.id}`}>
                       <Item variant="outline">
                         <ItemMedia variant="image">
                           <Image
                             src="https://placehold.co/100"
-                            alt={recipe.name ?? "Recipe image"}
+                            alt={template.name ?? "Template image"}
                             width={128}
                             height={128}
                             className="aspect-square w-full rounded-sm object-cover"
@@ -93,18 +93,18 @@ export default function RecipesView({ initial }: { initial: RecipeListItem[] }) 
                           />
                         </ItemMedia>
                         <ItemContent>
-                          <ItemTitle>{recipe.name ?? "Untitled"}</ItemTitle>
-                          <ItemDescription>{recipe.description ?? "No description"}</ItemDescription>
+                          <ItemTitle>{template.name ?? "Untitled"}</ItemTitle>
+                          <ItemDescription>{template.description ?? "No description"}</ItemDescription>
                         </ItemContent>
                       </Item>
                     </Link>
                   </ContextMenuTrigger>
                   <ContextMenuContent>
                     <ContextMenuItem asChild>
-                      <Link href={`/recipes/${recipe.id}/edit`}><PencilLine />Edit</Link>
+                      <Link href={`/templates/${template.id}/edit`}><PencilLine />Edit</Link>
                     </ContextMenuItem>
                     <ContextMenuItem asChild variant="destructive" onSelect={(e) => e.preventDefault()}>
-                      <DeleteRecipeButton id={recipe.id!} showButton={false} />
+                      <DeleteTemplateButton id={template.id!} showButton={false} />
                     </ContextMenuItem>
                   </ContextMenuContent>
                 </ContextMenu>

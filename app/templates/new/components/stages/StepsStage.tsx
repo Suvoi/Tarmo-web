@@ -1,16 +1,16 @@
 "use client"
-import { useRecipeFormStore } from "@/features/recipes/store/recipe-form-store"
+import { useTemplateFormStore } from "@/features/templates/store/template-form-store"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp, Plus } from "lucide-react"
-import StepForm from "@/features/recipes/components/step-form"
+import StepForm from "@/features/templates/components/step-form"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item"
 import { ButtonGroup } from "@/components/ui/button-group"
 
 export function StepsStage() {
-  const { formData, addStep, moveStepDown, moveStepUp } = useRecipeFormStore()
+  const { formData, addStep, moveStepDown, moveStepUp } = useTemplateFormStore()
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const isMobile = useIsMobile()

@@ -1,4 +1,4 @@
-import { RecipeFormWrapper } from "./components/RecipeFormWrapper"
+import { TemplateFormWrapper } from "./components/TemplateFormWrapper"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 
@@ -17,8 +17,8 @@ export default function Page() {
             </BreadcrumbItem>
             <BreadcrumbSeparator className="hidden md:block" />
             <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="/recipes">
-                Recipes
+              <BreadcrumbLink href="/templates">
+                Templates
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator className="hidden md:block" />
@@ -28,7 +28,7 @@ export default function Page() {
           </BreadcrumbList>
         </Breadcrumb>
       </header>
-      <RecipeFormWrapper />
+      <TemplateFormWrapper />
     </div>
   )
 }

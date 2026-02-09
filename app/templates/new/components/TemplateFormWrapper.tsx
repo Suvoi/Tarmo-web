@@ -1,7 +1,7 @@
 "use client"
 
-import { useRecipeFormStore } from "@/features/recipes/store/recipe-form-store"
-import StepForm from "@/features/recipes/components/step-form"
+import { useTemplateFormStore } from "@/features/templates/store/template-form-store"
+import StepForm from "@/features/templates/components/step-form"
 import { StepsStage } from "./stages/StepsStage"
 import { OverviewStage } from "./stages/OverviewStage"
 import { Button } from "@/components/ui/button"
@@ -9,7 +9,7 @@ import { Progress } from "@/components/ui/progress"
 import { ArrowLeft, ArrowRight, Check } from "lucide-react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { createRecipe, updateRecipe } from "@/features/recipes/api"
+import { createTemplate, updateTemplate } from "@/features/templates/api"
 import { MetadataStage } from "./stages/MetadataStage"
 import { toast } from "sonner"
 import { mutate } from "swr"
@@ -20,13 +20,13 @@ const STAGES = [
   { id: 2, name: "Overview", component: OverviewStage },
 ]
 
-interface RecipeFormWrapperProps {
+interface TemplateFormWrapperProps {
   mode?: 'create' | 'edit'
-  recipeId?: number
+  templateId?: number
 }
 
-export function RecipeFormWrapper({ mode = 'create', recipeId }: RecipeFormWrapperProps = {}) {
-  const { currentStage, setCurrentStage, canGoToStage, resetForm, getRecipeData } = useRecipeFormStore()
+export function TemplateFormWrapper({ mode = 'create', templateId }: TemplateFormWrapperProps = {}) {
+  const { currentStage, setCurrentStage, canGoToStage, resetForm, getTemplateData } = useTemplateFormStore()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const CurrentStageComponent = STAGES[currentStage].component
@@ -50,24 +50,24 @@ export function RecipeFormWrapper({ mode = 'create', recipeId }: RecipeFormWrapp
   const handleSubmit = async () => {
     setIsSubmitting(true)
     try {
-      const recipeData = getRecipeData()
+      const templateData = getTemplateData()
 
-      if (mode === 'edit' && recipeId) {
-        await updateRecipe(recipeId, recipeData)
-        router.push(`/recipes/${recipeId}`)
-        mutate(`/recipes/${recipeId}`)
-        mutate("/recipes")
+      if (mode === 'edit' && templateId) {
+        await updateTemplate(templateId, templateData)
+        router.push(`/templates/${templateId}`)
+        mutate(`/templates/${templateId}`)
+        mutate("/templates")
         resetForm()
-        toast.success("Recipe updated successfully!")
+        toast.success("Template updated successfully!")
       } else {
-        await createRecipe(recipeData)
-        router.push("/recipes")
-        mutate("/recipes")
+        await createTemplate(templateData)
+        router.push("/templates")
+        mutate("/templates")
         resetForm()
-        toast.success("Recipe added to your collection!")
+        toast.success("Template added to your collection!")
       }
     } catch (error) {
-      console.error(`Error ${mode === 'edit' ? 'updating' : 'creating'} recipe:`, error)
+      console.error(`Error ${mode === 'edit' ? 'updating' : 'creating'} template:`, error)
       toast.error("Oops! Something went wrong.")
     } finally {
       setIsSubmitting(false)
@@ -106,7 +106,7 @@ export function RecipeFormWrapper({ mode = 'create', recipeId }: RecipeFormWrapp
           >
             {isSubmitting
               ? (mode === 'edit' ? "Updating..." : "Creating...")
-              : (mode === 'edit' ? "Update Recipe" : "Create Recipe")
+              : (mode === 'edit' ? "Update Template" : "Create Template")
             }
             <Check className="ml-2 h-4 w-4" />
           </Button>

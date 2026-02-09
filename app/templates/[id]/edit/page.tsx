@@ -1,19 +1,19 @@
-import { RecipeFormWrapper } from "../../new/components/RecipeFormWrapper"
+import { TemplateFormWrapper } from "../../new/components/TemplateFormWrapper"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-import { getRecipe } from "@/features/recipes/api"
+import { getTemplate } from "@/features/templates/api"
 import { notFound } from "next/navigation"
-import { EditRecipeClient } from "./EditRecipeClient"
+import { EditTemplateClient } from "./EditTemplateClient"
 
-export default async function EditRecipePage({
+export default async function EditTemplatePage({
     params,
 }: {
     params: Promise<{ id: string }>
 }) {
     const { id } = await params
-    const recipe = await getRecipe(Number(id))
+    const template = await getTemplate(Number(id))
 
-    if (!recipe) {
+    if (!template) {
         notFound()
     }
 
@@ -30,14 +30,14 @@ export default async function EditRecipePage({
                         </BreadcrumbItem>
                         <BreadcrumbSeparator className="hidden md:block" />
                         <BreadcrumbItem className="hidden md:block">
-                            <BreadcrumbLink href="/recipes">
-                                Recipes
+                            <BreadcrumbLink href="/templates">
+                                Templates
                             </BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator className="hidden md:block" />
                         <BreadcrumbItem className="hidden md:block">
-                            <BreadcrumbLink href={`/recipes/${id}`}>
-                                {recipe.name}
+                            <BreadcrumbLink href={`/templates/${id}`}>
+                                {template.name}
                             </BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbSeparator className="hidden md:block" />
@@ -47,7 +47,7 @@ export default async function EditRecipePage({
                     </BreadcrumbList>
                 </Breadcrumb>
             </header>
-            <EditRecipeClient recipeId={Number(id)} recipe={recipe} />
+            <EditTemplateClient templateId={Number(id)} template={template} />
         </div>
     )
 }

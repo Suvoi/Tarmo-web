@@ -4,14 +4,14 @@
  */
 
 export interface paths {
-    "/recipes": {
+    "/templates": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Get a list of all recipes in the collection */
+        /** @description Get a list of all templates in the collection */
         get: {
             parameters: {
                 query?: never;
@@ -26,7 +26,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["RecipeListJSONResponseDTO"];
+                        "application/json": components["schemas"]["TemplateListJSONResponseDTO"];
                     };
                 };
                 /** @description internal error */
@@ -41,7 +41,7 @@ export interface paths {
             };
         };
         put?: never;
-        /** @description Add a new recipe to the collection */
+        /** @description Add a new template to the collection */
         post: {
             parameters: {
                 query?: never;
@@ -51,7 +51,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["CreateRecipeRequestDTO"];
+                    "application/json": components["schemas"]["CreateTemplateRequestDTO"];
                 };
             };
             responses: {
@@ -79,20 +79,20 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/recipes/{id}": {
+    "/templates/{id}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Get detailed information about a single recipe */
+        /** @description Get detailed information about a single template */
         get: {
             parameters: {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description Recipe ID */
+                    /** @description Template ID */
                     id: number;
                 };
                 cookie?: never;
@@ -104,7 +104,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["RecipeJSONResponseDTO"];
+                        "application/json": components["schemas"]["TemplateJSONResponseDTO"];
                     };
                 };
                 /** @description invalid id */
@@ -116,7 +116,7 @@ export interface paths {
                         "application/json": string;
                     };
                 };
-                /** @description recipe not found */
+                /** @description template not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -136,20 +136,20 @@ export interface paths {
                 };
             };
         };
-        /** @description Update an existing recipe's information */
+        /** @description Update an existing template's information */
         put: {
             parameters: {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description Recipe ID */
+                    /** @description Template ID */
                     id: number;
                 };
                 cookie?: never;
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["UpdateRecipeRequestDTO"];
+                    "application/json": components["schemas"]["UpdateTemplateRequestDTO"];
                 };
             };
             responses: {
@@ -169,7 +169,7 @@ export interface paths {
                         "application/json": string;
                     };
                 };
-                /** @description recipe not found */
+                /** @description template not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -190,13 +190,13 @@ export interface paths {
             };
         };
         post?: never;
-        /** @description Remove a recipe from the collection */
+        /** @description Remove a template from the collection */
         delete: {
             parameters: {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description Recipe ID */
+                    /** @description Template ID */
                     id: number;
                 };
                 cookie?: never;
@@ -219,7 +219,7 @@ export interface paths {
                         "application/json": string;
                     };
                 };
-                /** @description recipe not found */
+                /** @description template not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -248,7 +248,7 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        CreateRecipeRequestDTO: {
+        CreateTemplateRequestDTO: {
             description?: string;
             difficulty?: number;
             name?: string;
@@ -259,7 +259,7 @@ export interface components {
             }[];
             unit?: string;
         };
-        RecipeJSONResponseDTO: {
+        TemplateJSONResponseDTO: {
             description?: string;
             difficulty?: number;
             id?: number;
@@ -272,7 +272,7 @@ export interface components {
             }[];
             unit?: string;
         };
-        RecipeListJSONResponseDTO: {
+        TemplateListJSONResponseDTO: {
             description?: string;
             id?: number;
             name?: string;
@@ -286,7 +286,7 @@ export interface components {
             name?: string;
             order?: number;
         };
-        UpdateRecipeRequestDTO: {
+        UpdateTemplateRequestDTO: {
             description?: string;
             difficulty?: number;
             id?: number;

@@ -1,37 +1,37 @@
 import { create } from 'zustand'
 import { z } from 'zod'
-import { RecipeOverviewSchema, RecipeStepsSchema } from '../schemas/recipe-schemas'
-import type { CreateRecipeRequest, UpdateRecipeRequest } from '../api'
+import { TemplateOverviewSchema, TemplateStepsSchema } from '../schemas/template-schemas'
+import type { CreateTemplateRequest, UpdateTemplateRequest } from '../api'
 
-type RecipeFormData = CreateRecipeRequest & UpdateRecipeRequest
+type TemplateFormData = CreateTemplateRequest & UpdateTemplateRequest
 
-type RecipeFormStore = {
+type TemplateFormStore = {
     currentStage: number
-    formData: Partial<RecipeFormData>
+    formData: Partial<TemplateFormData>
     mode: 'create' | 'edit'
-    recipeId: number | null
+    templateId: number | null
 
     setCurrentStage: (stage: number) => void
-    updateFormData: (data: Partial<RecipeFormData>) => void
+    updateFormData: (data: Partial<TemplateFormData>) => void
     updateStep: (index: number, field: 'name' | 'instructions', value: string) => void
     addStep: () => void
     removeStep: (index: number) => void
     moveStepUp: (index: number) => void
     moveStepDown: (index: number) => void
     resetForm: () => void
-    initializeForEdit: (recipeId: number, recipe: RecipeFormData) => void
+    initializeForEdit: (templateId: number, template: TemplateFormData) => void
     canGoToStage: (targetStage: number) => boolean
-    getRecipeData: () => RecipeFormData
+    getTemplateData: () => TemplateFormData
 }
 
-export const useRecipeFormStore = create<RecipeFormStore>((set, get) => ({
+export const useTemplateFormStore = create<TemplateFormStore>((set, get) => ({
     currentStage: 0,
     formData: {
         steps: [],
         difficulty: 0,
     },
     mode: 'create',
-    recipeId: null,
+    templateId: null,
 
     setCurrentStage: (stage) => {
         set({ currentStage: stage })
@@ -99,15 +99,15 @@ export const useRecipeFormStore = create<RecipeFormStore>((set, get) => ({
             currentStage: 0,
             formData: { steps: [], difficulty: 0 },
             mode: 'create',
-            recipeId: null
+            templateId: null
         })
     },
 
-    initializeForEdit: (recipeId: number, recipe: RecipeFormData) => {
+    initializeForEdit: (templateId: number, template: TemplateFormData) => {
         set({
             mode: 'edit',
-            recipeId,
-            formData: recipe,
+            templateId,
+            formData: template,
             currentStage: 0
         })
     },
@@ -119,10 +119,10 @@ export const useRecipeFormStore = create<RecipeFormStore>((set, get) => ({
 
         try {
             if (targetStage === 1) {
-                RecipeOverviewSchema.parse(formData)
+                TemplateOverviewSchema.parse(formData)
             } else if (targetStage === 2) {
-                RecipeOverviewSchema.parse(formData)
-                RecipeStepsSchema.parse(formData.steps)
+                TemplateOverviewSchema.parse(formData)
+                TemplateStepsSchema.parse(formData.steps)
             }
             return true
         } catch {
@@ -130,11 +130,11 @@ export const useRecipeFormStore = create<RecipeFormStore>((set, get) => ({
         }
     },
 
-    getRecipeData: () => {
+    getTemplateData: () => {
         const { formData } = get()
         return z.object({
-            ...RecipeOverviewSchema.shape,
-            steps: RecipeStepsSchema
-        }).parse(formData) as RecipeFormData
+            ...TemplateOverviewSchema.shape,
+            steps: TemplateStepsSchema
+        }).parse(formData) as TemplateFormData
     },
 }))

@@ -1,5 +1,5 @@
 "use client"
-import { useRecipeFormStore } from "@/features/recipes/store/recipe-form-store"
+import { useTemplateFormStore } from "@/features/templates/store/template-form-store"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -7,7 +7,7 @@ import { Field, FieldLabel } from "@/components/ui/field"
 import { CircleQuestionMark, Croissant, Flame, Scale, Skull, Zap } from "lucide-react"
 
 export function MetadataStage() {
-  const { formData, updateFormData } = useRecipeFormStore()
+  const { formData, updateFormData } = useTemplateFormStore()
 
   return (
     <div className="max-w-4xl sm:1/2 xl:w-1/3 flex flex-col space-y-4">
