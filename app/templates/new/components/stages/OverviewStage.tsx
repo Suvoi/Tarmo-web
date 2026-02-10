@@ -1,3 +1,5 @@
+"use client"
+
 import { TemplateDetailView } from "@/features/templates/components/template-detail-view"
 import { useTemplateFormStore } from "@/features/templates/store/template-form-store"
 

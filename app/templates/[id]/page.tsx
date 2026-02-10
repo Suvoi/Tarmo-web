@@ -47,7 +47,7 @@ export default async function TemplatePage({
         </Breadcrumb>
       </header>
 
-      <div className="w-full px-4 flex-1">
+      <div className="w-full flex-1 min-h-0 px-4">
         <TemplateDetailView template={template} />
       </div>
 

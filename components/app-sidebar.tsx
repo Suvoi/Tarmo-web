@@ -12,7 +12,7 @@ import {
 import { Lexend } from 'next/font/google'
 import Link from "next/link"
 import Image from 'next/image'
-import { Form } from "lucide-react"
+import { Box, Form } from "lucide-react"
 
 const lexend = Lexend({
   subsets: ['latin'],
@@ -25,6 +25,11 @@ const data = {
       title: 'Templates',
       url: '/templates',
       icon: Form,
+    },
+    {
+      title: 'Resources',
+      url: '/resources',
+      icon: Box,
     },
   ],
 }

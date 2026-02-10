@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { z } from 'zod'
-import { TemplateOverviewSchema, TemplateStepsSchema } from '../schemas/template-schemas'
+import { TemplateOverviewSchema, TemplateStepsSchema, TemplateResourcesSchema } from '../schemas/template-schemas'
 import type { CreateTemplateRequest, UpdateTemplateRequest } from '../api'
 
 type TemplateFormData = CreateTemplateRequest & UpdateTemplateRequest
@@ -18,6 +18,12 @@ type TemplateFormStore = {
     removeStep: (index: number) => void
     moveStepUp: (index: number) => void
     moveStepDown: (index: number) => void
+
+    // Resource actions
+    addResource: (resourceId: number) => void
+    removeResource: (index: number) => void
+    updateResource: (index: number, data: Partial<NonNullable<TemplateFormData['resources']>[number]>) => void
+
     resetForm: () => void
     initializeForEdit: (templateId: number, template: TemplateFormData) => void
     canGoToStage: (targetStage: number) => boolean
@@ -94,10 +100,37 @@ export const useTemplateFormStore = create<TemplateFormStore>((set, get) => ({
             return { formData: { ...state.formData, steps } }
         }),
 
+    addResource: (resourceId: number) =>
+        set((state) => ({
+            formData: {
+                ...state.formData,
+                resources: [
+                    ...(state.formData.resources || []),
+                    { resource_id: resourceId, quantity: 1, unit: "pcs" }
+                ]
+            }
+        })),
+
+    removeResource: (index: number) =>
+        set((state) => ({
+            formData: {
+                ...state.formData,
+                resources: (state.formData.resources || []).filter((_, i) => i !== index)
+            }
+        })),
+
+    updateResource: (index: number, data: Partial<NonNullable<TemplateFormData['resources']>[number]>) =>
+        set((state) => {
+            const resources = [...(state.formData.resources || [])]
+            if (index < 0 || index >= resources.length) return state
+            resources[index] = { ...resources[index], ...data }
+            return { formData: { ...state.formData, resources } }
+        }),
+
     resetForm: () => {
         set({
             currentStage: 0,
-            formData: { steps: [], difficulty: 0 },
+            formData: { steps: [], resources: [], difficulty: 0 },
             mode: 'create',
             templateId: null
         })
@@ -123,6 +156,10 @@ export const useTemplateFormStore = create<TemplateFormStore>((set, get) => ({
             } else if (targetStage === 2) {
                 TemplateOverviewSchema.parse(formData)
                 TemplateStepsSchema.parse(formData.steps)
+            } else if (targetStage === 3) {
+                TemplateOverviewSchema.parse(formData)
+                TemplateStepsSchema.parse(formData.steps)
+                TemplateResourcesSchema.parse(formData.resources)
             }
             return true
         } catch {
@@ -134,7 +171,8 @@ export const useTemplateFormStore = create<TemplateFormStore>((set, get) => ({
         const { formData } = get()
         return z.object({
             ...TemplateOverviewSchema.shape,
-            steps: TemplateStepsSchema
+            steps: TemplateStepsSchema,
+            resources: TemplateResourcesSchema
         }).parse(formData) as TemplateFormData
     },
 }))

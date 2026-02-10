@@ -4,6 +4,7 @@ import { useTemplateFormStore } from "@/features/templates/store/template-form-s
 import StepForm from "@/features/templates/components/step-form"
 import { StepsStage } from "./stages/StepsStage"
 import { OverviewStage } from "./stages/OverviewStage"
+import { ResourcesStage } from "./stages/ResourcesStage"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { ArrowLeft, ArrowRight, Check } from "lucide-react"
@@ -17,7 +18,8 @@ import { mutate } from "swr"
 const STAGES = [
   { id: 0, name: "General", component: MetadataStage },
   { id: 1, name: "Steps", component: StepsStage },
-  { id: 2, name: "Overview", component: OverviewStage },
+  { id: 2, name: "Resources", component: ResourcesStage },
+  { id: 3, name: "Overview", component: OverviewStage },
 ]
 
 interface TemplateFormWrapperProps {
