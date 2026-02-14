@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/sonner"
+import VersionTag from "@/components/version-tag";
 
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-sans' });
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -23,9 +24,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <SidebarProvider>
             <AppSidebar />
             <main className="h-dvh w-full relative overflow-hidden">
-              {children}       
+              {children}
             </main>
             <Toaster position="top-center" />
+            <VersionTag />
           </SidebarProvider>
         </ThemeProvider>
       </body>
