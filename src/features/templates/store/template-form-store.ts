@@ -1,18 +1,27 @@
 import { create } from 'zustand'
 import { z } from 'zod'
-import { TemplateOverviewSchema, TemplateStepsSchema, TemplateResourcesSchema } from '../schemas/template-schemas'
-import type { CreateTemplateRequest, UpdateTemplateRequest } from '../api'
+import {
+    TemplateFormData,
+    TemplateFormBaseSchema,
+    TemplateStepsSchema,
+    TemplateResourcesSchema,
+    CreateTemplateSchema,
+    CreateTemplateRequest,
+    UpdateTemplateRequest
+} from '../schemas/template-schemas'
+import type { Template } from '../api/templates-api'
 
-type TemplateFormData = CreateTemplateRequest & UpdateTemplateRequest
+type TemplateFormDataType = TemplateFormData
+
 
 type TemplateFormStore = {
     currentStage: number
-    formData: Partial<TemplateFormData>
+    formData: Partial<TemplateFormDataType>
     mode: 'create' | 'edit'
     templateId: number | null
 
     setCurrentStage: (stage: number) => void
-    updateFormData: (data: Partial<TemplateFormData>) => void
+    updateFormData: (data: Partial<TemplateFormDataType>) => void
     updateStep: (index: number, field: 'name' | 'instructions', value: string) => void
     addStep: () => void
     removeStep: (index: number) => void
@@ -22,12 +31,12 @@ type TemplateFormStore = {
     // Resource actions
     addResource: (resourceId: number) => void
     removeResource: (index: number) => void
-    updateResource: (index: number, data: Partial<NonNullable<TemplateFormData['resources']>[number]>) => void
+    updateResource: (index: number, data: Partial<NonNullable<TemplateFormDataType['resources']>[number]>) => void
 
     resetForm: () => void
-    initializeForEdit: (templateId: number, template: TemplateFormData) => void
+    initializeForEdit: (templateId: number, template: Template) => void
     canGoToStage: (targetStage: number) => boolean
-    getTemplateData: () => TemplateFormData
+    getTemplateData: () => CreateTemplateRequest
 }
 
 export const useTemplateFormStore = create<TemplateFormStore>((set, get) => ({
@@ -106,7 +115,7 @@ export const useTemplateFormStore = create<TemplateFormStore>((set, get) => ({
                 ...state.formData,
                 resources: [
                     ...(state.formData.resources || []),
-                    { resource_id: resourceId, quantity: 1, unit: "pcs" }
+                    { resource_id: resourceId, quantity: 1, unit: 'pcs' }
                 ]
             }
         })),
@@ -136,11 +145,29 @@ export const useTemplateFormStore = create<TemplateFormStore>((set, get) => ({
         })
     },
 
-    initializeForEdit: (templateId: number, template: TemplateFormData) => {
+    initializeForEdit: (templateId: number, template: Template) => {
+        // Transform API response to form data
+        const formData: Partial<TemplateFormDataType> = {
+            name: template.name ?? '',
+            description: template.description ?? null,
+            difficulty: template.difficulty ?? 0,
+            quantity: template.quantity ?? 1,
+            unit: template.unit ?? '',
+            steps: template.steps?.map(step => ({
+                name: step.name ?? '',
+                instructions: step.instructions ?? null,
+            })) ?? [],
+            resources: template.resources?.map(res => ({
+                resource_id: res.resource_id ?? 0,
+                quantity: res.quantity ?? 0,
+                unit: res.unit ?? '',
+            })) ?? [],
+        }
+
         set({
             mode: 'edit',
             templateId,
-            formData: template,
+            formData,
             currentStage: 0
         })
     },
@@ -152,12 +179,12 @@ export const useTemplateFormStore = create<TemplateFormStore>((set, get) => ({
 
         try {
             if (targetStage === 1) {
-                TemplateOverviewSchema.parse(formData)
+                TemplateFormBaseSchema.parse(formData)
             } else if (targetStage === 2) {
-                TemplateOverviewSchema.parse(formData)
+                TemplateFormBaseSchema.parse(formData)
                 TemplateStepsSchema.parse(formData.steps)
             } else if (targetStage === 3) {
-                TemplateOverviewSchema.parse(formData)
+                TemplateFormBaseSchema.parse(formData)
                 TemplateStepsSchema.parse(formData.steps)
                 TemplateResourcesSchema.parse(formData.resources)
             }
@@ -169,10 +196,16 @@ export const useTemplateFormStore = create<TemplateFormStore>((set, get) => ({
 
     getTemplateData: () => {
         const { formData } = get()
-        return z.object({
-            ...TemplateOverviewSchema.shape,
-            steps: TemplateStepsSchema,
-            resources: TemplateResourcesSchema
-        }).parse(formData) as TemplateFormData
+        const parsed = CreateTemplateSchema.parse(formData) as TemplateFormDataType
+
+        // Transform null to undefined for API compatibility
+        return {
+            ...parsed,
+            description: parsed.description ?? undefined,
+            steps: parsed.steps.map(step => ({
+                ...step,
+                instructions: step.instructions ?? undefined,
+            })),
+        }
     },
 }))

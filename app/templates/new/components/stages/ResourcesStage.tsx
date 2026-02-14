@@ -10,6 +10,11 @@ import useSWR from "swr"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
+import { format } from "path"
+import { formatPrice } from "@/lib/format/price"
+import { formatQuantity } from "@/lib/format/quantity"
 
 export function ResourcesStage() {
     const { formData, addResource, removeResource, updateResource } = useTemplateFormStore()
@@ -50,7 +55,7 @@ export function ResourcesStage() {
                                 <ItemContent>
                                     <ItemTitle className="text-xl">{resource?.name || "Loading..."}</ItemTitle>
                                     <ItemDescription className="text-lg">
-                                        {ref.quantity} {ref.unit}
+                                        {formatQuantity(ref.quantity!, ref.unit!)}
                                     </ItemDescription>
                                 </ItemContent>
                                 <ItemActions>
@@ -84,6 +89,7 @@ export function ResourcesStage() {
                             <Label className="text-muted-foreground">Resource</Label>
                             <div className="text-lg font-medium">{currentResource.name}</div>
                             <p className="text-sm text-muted-foreground">{currentResource.description}</p>
+                            <Badge>{formatPrice(currentResource.price!)} / {formatQuantity(currentResource.base_quantity!, currentResource.base_unit!)}</Badge>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
@@ -92,19 +98,34 @@ export function ResourcesStage() {
                                 <Input
                                     id="quantity"
                                     type="number"
+                                    step="0.01"
                                     value={currentResourceRef.quantity}
-                                    onChange={(e) => updateResource(editingIndex, { quantity: Number(e.target.value) })}
-                                    min={1}
+                                    onChange={(e) => updateResource(editingIndex, { quantity: parseFloat(e.target.value) })}
+                                    min={0}
                                 />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="unit">Unit</Label>
-                                <Input
-                                    id="unit"
+                                <Select name="unit"
                                     value={currentResourceRef.unit}
-                                    onChange={(e) => updateResource(editingIndex, { unit: e.target.value })}
-                                    placeholder="e.g. g, pcs, liters"
-                                />
+                                    onValueChange={(value) =>
+                                        updateResource(editingIndex, { unit: value })
+                                    }>
+                                    <SelectTrigger className="w-32">
+                                        <SelectValue placeholder="Unit" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Units</SelectLabel>
+                                            <SelectItem value="kg">Kilograms</SelectItem>
+                                            <SelectItem value="g">Grams</SelectItem>
+                                            <SelectItem value="mg">Milligrams</SelectItem>
+                                            <SelectItem value="l">Liters</SelectItem>
+                                            <SelectItem value="ml">Milliliters</SelectItem>
+                                            <SelectItem value="pcs">Pieces</SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
                             </div>
                         </div>
                     </div>

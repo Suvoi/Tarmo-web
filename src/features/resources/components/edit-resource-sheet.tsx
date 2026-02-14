@@ -15,6 +15,7 @@ import {
 import { Resource } from "../api/resources-api"
 import { updateResourceAction } from "../api/resource-actions"
 import { useState } from "react"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface EditResourceSheetProps {
     resource: Resource
@@ -68,6 +69,36 @@ export function EditResourceSheet({ resource, trigger }: EditResourceSheetProps)
                             defaultValue={resource.price}
                             required
                         />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="quantity">Base Quantity</Label>
+                        <Input
+                            id="quantity"
+                            name="quantity"
+                            type="number"
+                            step="0.01"
+                            defaultValue={resource.base_quantity || 1}
+                            required
+                        />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="unit">Base Unit</Label>
+                        <Select name="unit" defaultValue={resource.base_unit}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Unit" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Units</SelectLabel>
+                                    <SelectItem value="kg">Kilograms</SelectItem>
+                                    <SelectItem value="g">Grams</SelectItem>
+                                    <SelectItem value="mg">Milligrams</SelectItem>
+                                    <SelectItem value="l">Liters</SelectItem>
+                                    <SelectItem value="ml">Milliliters</SelectItem>
+                                    <SelectItem value="pcs">Pieces</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                     </div>
                     <SheetFooter className="mt-4">
                         <Button type="submit">Save changes</Button>

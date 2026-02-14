@@ -45,18 +45,18 @@ export function MetadataStage() {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="Pieces">Pieces</SelectItem>
+                <SelectItem value="pcs">Pieces</SelectItem>
               </SelectGroup>
               <SelectGroup>
                 <SelectLabel>Weight</SelectLabel>
-                <SelectItem value="Kilograms">Kilograms (kg)</SelectItem>
-                <SelectItem value="Grams">Grams (g)</SelectItem>
-                <SelectItem value="Miligrams">Miligrams (mg)</SelectItem>
+                <SelectItem value="kg">Kilograms (kg)</SelectItem>
+                <SelectItem value="g">Grams (g)</SelectItem>
+                <SelectItem value="mg">Miligrams (mg)</SelectItem>
               </SelectGroup>
               <SelectGroup>
                 <SelectLabel>Volume</SelectLabel>
-                <SelectItem value="Liters">Liters (l)</SelectItem>
-                <SelectItem value="Mililiters">Mililiters (ml)</SelectItem>
+                <SelectItem value="l">Liters (l)</SelectItem>
+                <SelectItem value="ml">Mililiters (ml)</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>

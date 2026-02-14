@@ -26,7 +26,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ResourceJSONResponseDTO"][];
+                        "application/json": components["schemas"]["ResourceJSONResponseDTO"];
                     };
                 };
                 /** @description internal error */
@@ -266,7 +266,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TemplateListJSONResponseDTO"][];
+                        "application/json": components["schemas"]["TemplateListJSONResponseDTO"];
                     };
                 };
                 /** @description internal error */
@@ -492,17 +492,28 @@ export interface components {
             description?: string;
             name?: string;
             price?: number;
+            quantity?: number;
+            unit?: string;
         };
         CreateTemplateRequestDTO: {
             description?: string;
             difficulty?: number;
             name?: string;
             quantity?: number;
-            resources?: components["schemas"]["ResourceRefDTO"][];
-            steps?: components["schemas"]["StepDTO"][];
+            resources?: {
+                quantity?: number;
+                resource_id?: number;
+                unit?: string;
+            }[];
+            steps?: {
+                instructions?: string;
+                name?: string;
+            }[];
             unit?: string;
         };
         ResourceJSONResponseDTO: {
+            base_quantity?: number;
+            base_unit?: string;
             description?: string;
             id?: number;
             name?: string;
@@ -533,8 +544,16 @@ export interface components {
             id?: number;
             name?: string;
             quantity?: number;
-            resources?: components["schemas"]["ResourceRefResponseDTO"][];
-            steps?: components["schemas"]["StepJSONResponseDTO"][];
+            resources?: {
+                quantity?: number;
+                resource_id?: number;
+                unit?: string;
+            }[];
+            steps?: {
+                instructions?: string;
+                name?: string;
+                order?: number;
+            }[];
             unit?: string;
         };
         TemplateListJSONResponseDTO: {
@@ -547,6 +566,8 @@ export interface components {
             id?: number;
             name?: string;
             price?: number;
+            quantity?: number;
+            unit?: string;
         };
         UpdateTemplateRequestDTO: {
             description?: string;

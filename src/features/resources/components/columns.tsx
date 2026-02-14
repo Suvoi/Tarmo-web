@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { EditResourceSheet } from "./edit-resource-sheet"
 import DeleteResourceButton from "./delete-resource-button"
+import { formatQuantity } from "@/lib/format/quantity"
 
 export const columns: ColumnDef<Resource>[] = [
     {
@@ -33,12 +34,10 @@ export const columns: ColumnDef<Resource>[] = [
         accessorKey: "price",
         header: "Price",
         cell: ({ row }) => {
-            const price = parseFloat(row.getValue("price")) / 100
-            const formatted = price.toLocaleString("es-ES", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            })
-            return <div className="font-medium">{formatted}</div>
+            const resource = row.original
+            const price = (resource.price || 0) / 100
+
+            return <div className="font-medium text-right">${price} / {formatQuantity(resource.base_quantity!, resource.base_unit!)}</div>
         },
     },
     {

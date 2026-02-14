@@ -1,29 +1,55 @@
 import { z } from 'zod'
+import type { components } from '@/lib/api/types.gen'
+import { ResourceRefSchema } from './resource-ref-schemas'
+import { StepSchema } from './step-schemas'
 
-export const TemplateStepSchema = z.object({
-    name: z.string().min(1, "Step name is required").trim(),
-    instructions: z.string().optional().nullable(),
-})
+// ============================================================================
+// OpenAPI Generated Types (for compile-time type safety)
+// ============================================================================
+type Schema = components['schemas']
 
-export const TemplateStepsSchema = z.array(TemplateStepSchema).min(1, "At least one step is required")
+// Response types from the API
+export type TemplateResponse = Schema['TemplateJSONResponseDTO']
+export type TemplateListItemResponse = Schema['TemplateListJSONResponseDTO']
 
-export const ResourceRefSchema = z.object({
-    resource_id: z.number().min(1, "Resource is required"),
-    quantity: z.number().min(1, "Quantity must be at least 1"),
-    unit: z.string().min(1, "Unit is required"),
-})
+// Request types for the API
+export type CreateTemplateRequest = Schema['CreateTemplateRequestDTO']
+export type UpdateTemplateRequest = Schema['UpdateTemplateRequestDTO']
 
+// ============================================================================
+// Zod Schemas (for runtime validation in forms)
+// ============================================================================
+
+// Validation for steps array
+export const TemplateStepsSchema = z.array(StepSchema).min(1, 'At least one step is required')
+
+// Validation for resources array
 export const TemplateResourcesSchema = z.array(ResourceRefSchema)
 
-export const TemplateOverviewSchema = z.object({
-    name: z.string().min(1, "Name is required").trim(),
-    description: z.string().optional().nullable(),
-    quantity: z.number().min(1, "Quantity must be at least 1"),
-    unit: z.string().min(1, "Unit is required"),
+// Base template validation schema (for form data)
+export const TemplateFormBaseSchema = z.object({
+    name: z.string().min(1, 'Name is required').trim(),
+    description: z.string().nullable().optional(),
     difficulty: z.number().min(0).max(5),
-    img_url: z.string().url().optional().nullable(),
 })
 
-export type TemplateStep = z.infer<typeof TemplateStepSchema>
-export type TemplateOverview = z.infer<typeof TemplateOverviewSchema>
-export type ResourceRef = z.infer<typeof ResourceRefSchema>
+// Complete template validation schema (for create/update)
+export const CreateTemplateSchema = TemplateFormBaseSchema.extend({
+    quantity: z.number().positive('Quantity must be positive'),
+    unit: z.string().min(1, 'Unit is required'),
+    steps: TemplateStepsSchema,
+    resources: TemplateResourcesSchema.optional(),
+})
+
+export const UpdateTemplateSchema = TemplateFormBaseSchema.extend({
+    quantity: z.number().positive('Quantity must be positive').optional(),
+    unit: z.string().min(1, 'Unit is required').optional(),
+    steps: TemplateStepsSchema.optional(),
+    resources: TemplateResourcesSchema.optional(),
+})
+
+// ============================================================================
+// Inferred Types from Zod (for form state management)
+// ============================================================================
+export type TemplateFormData = z.infer<typeof CreateTemplateSchema>
+export type TemplateFormBase = z.infer<typeof TemplateFormBaseSchema>

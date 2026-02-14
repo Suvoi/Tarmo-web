@@ -6,6 +6,8 @@ import { Zap, CircleQuestionMark, Flame, Skull, Scale, Croissant, Box, List } fr
 import type { Template } from "@/features/templates/api"
 import { getResources } from "@/features/resources/api/resources-api"
 import useSWR from "swr"
+import { calculateCost, formatCurrency } from "@/features/shared/utils/unit-conversion"
+import { formatQuantity } from "@/lib/format/quantity"
 
 interface TemplateDetailViewProps {
   template: Template
@@ -13,6 +15,27 @@ interface TemplateDetailViewProps {
 
 export function TemplateDetailView({ template }: TemplateDetailViewProps) {
   const { data: resources = [] } = useSWR("/resources", getResources)
+
+  let totalCost = 0
+  const resourceCosts = template.resources?.map(ref => {
+    const resource = resources.find(r => r.id === ref.resource_id)
+    if (!resource) return { cost: null, resource, ref }
+
+    // Calculate cost based on base unit and quantity
+    const cost = calculateCost(
+      resource.price || 0,
+      resource.base_quantity || 1,
+      resource.base_unit || 'u',
+      ref.quantity || 0,
+      ref.unit || 'u'
+    )
+
+    if (cost !== null) {
+      totalCost += cost
+    }
+
+    return { cost, resource, ref }
+  }) || []
 
   const getDifficultyIcon = (difficulty?: number) => {
     switch (difficulty) {
@@ -56,11 +79,16 @@ export function TemplateDetailView({ template }: TemplateDetailViewProps) {
     <div className="h-full w-full p-2 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-8 overflow-y-auto md:overflow-hidden">
       <div className="p-2 min-h-0 flex flex-col gap-6 overflow-hidden">
         <div className="space-y-3 shrink-0">
-          <h2 className="text-4xl">{template.name}</h2>
+          <div className="flex justify-between items-start">
+            <h2 className="text-4xl font-bold">{template.name}</h2>
+            <Badge className="text-2xl font-semibold p-4" variant="outline">
+              {formatCurrency(totalCost)}
+            </Badge>
+          </div>
           <div className="flex flex-wrap gap-2">
             {template.quantity && template.unit && (
               <Badge className="text-base">
-                {template.quantity} {template.unit}
+                {formatQuantity(template.quantity, template.unit)}
               </Badge>
             )}
             {template.difficulty !== undefined && template.difficulty !== null && (
@@ -83,12 +111,17 @@ export function TemplateDetailView({ template }: TemplateDetailViewProps) {
               Resources
             </h3>
             <div className="flex-1 overflow-y-auto space-y-2 pr-2">
-              {template.resources.map((ref, index) => {
-                const resource = resources.find(r => r.id === ref.resource_id)
+              {resourceCosts.map(({ cost, resource, ref }, index) => {
+                if (!ref) return null
                 return (
                   <div key={index} className="flex justify-between items-center p-3 rounded-lg border bg-card shrink-0">
-                    <span className="font-medium text-lg">{resource?.name || "Loading..."}</span>
-                    <span className="text-muted-foreground text-lg">{ref.quantity} {ref.unit}</span>
+                    <div className="flex flex-col">
+                      <span className="font-medium text-lg">{resource?.name || "Loading..."}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {cost !== null ? formatCurrency(cost) : "N/A"}
+                      </span>
+                    </div>
+                    <span className="text-muted-foreground text-lg">{formatQuantity(ref.quantity!, ref.unit!)}</span>
                   </div>
                 )
               })}
